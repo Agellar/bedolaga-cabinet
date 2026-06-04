@@ -44,7 +44,7 @@ export default function Referral() {
   const navigate = useNavigate();
   const { formatAmount, currencySymbol, formatPositive, formatWithCurrency } = useCurrency();
   const queryClient = useQueryClient();
-  const [copiedLink, setCopiedLink] = useState<'cabinet' | 'bot' | null>(null);
+  const [copiedLink, setCopiedLink] = useState<'code' | 'bot' | null>(null);
   const copyTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -58,10 +58,6 @@ export default function Referral() {
     queryFn: referralApi.getReferralInfo,
   });
 
-  // Build referral link for cabinet registration
-  const referralLink = info?.referral_code
-    ? `${window.location.origin}/login?ref=${info.referral_code}`
-    : '';
   const botReferralLink = info?.bot_referral_link || '';
 
   const { data: terms } = useQuery({
@@ -128,7 +124,7 @@ export default function Referral() {
     const gridCols = gridColsMap[cardCount] ?? 'md:grid-cols-4';
 
     return (
-      <div className="bento-card">
+      <div className="bento-card glass-card">
         <h2 className="mb-4 text-lg font-semibold text-dark-100">{t('referral.terms.title')}</h2>
         <div className={`grid grid-cols-2 gap-4 ${gridCols}`}>
           <div className="rounded-xl bg-dark-800/30 p-3">
@@ -164,7 +160,7 @@ export default function Referral() {
     );
   }, [terms, t, formatAmount, formatPositive, currencySymbol]);
 
-  const copyLink = async (link: string, type: 'cabinet' | 'bot') => {
+  const copyLink = async (link: string, type: 'code' | 'bot') => {
     if (!link) return;
     try {
       await copyToClipboard(link);
@@ -179,7 +175,7 @@ export default function Referral() {
   const { openTelegramLink } = usePlatform();
 
   const shareLink = () => {
-    if (!referralLink) return;
+    if (!botReferralLink) return;
     const shareText = t('referral.shareMessage', {
       percent: info?.commission_percent || 0,
       botName: branding?.name || import.meta.env.VITE_APP_NAME || 'Cabinet',
@@ -190,14 +186,14 @@ export default function Referral() {
         .share({
           title: t('referral.title'),
           text: shareText,
-          url: referralLink,
+          url: botReferralLink,
         })
         .catch(() => {});
       return;
     }
 
     const telegramUrl = `https://t.me/share/url?url=${encodeURIComponent(
-      referralLink,
+      botReferralLink,
     )}&text=${encodeURIComponent(shareText)}`;
     openTelegramLink(telegramUrl);
   };
@@ -235,32 +231,37 @@ export default function Referral() {
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('referral.title')}</h1>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-        <div className="bento-card-hover col-span-2 md:col-span-1">
-          <div className="text-sm text-dark-400">{t('referral.stats.totalReferrals')}</div>
-          <div className="stat-value mt-1">{info?.total_referrals || 0}</div>
-          <div className="mt-1 text-sm text-dark-500">
-            {info?.active_referrals || 0} {t('referral.stats.activeReferrals').toLowerCase()}
-          </div>
-        </div>
-        <div className="bento-card-hover">
-          <div className="text-sm text-dark-400">{t('referral.stats.totalEarnings')}</div>
-          <div className="stat-value mt-1 text-success-400">
-            {formatPositive(info?.total_earnings_rubles || 0)}
-          </div>
-        </div>
-        <div className="bento-card-hover">
-          <div className="text-sm text-dark-400">{t('referral.stats.commissionRate')}</div>
-          <div className="stat-value mt-1 text-accent-400">{info?.commission_percent || 0}%</div>
-        </div>
-      </div>
+      {/* Referral link + code — aurora glass hero (moved to top) */}
+      <div className="bento-card aurora-hero">
+        <div className="relative z-10">
+          <h2 className="mb-4 text-lg font-semibold text-dark-100">{t('referral.yourLink')}</h2>
 
-      {/* Referral Links */}
-      <div className="bento-card">
-        <h2 className="mb-4 text-lg font-semibold text-dark-100">{t('referral.yourLink')}</h2>
-        <div className="space-y-3">
-          {/* Bot link */}
+          {/* Referral code shown separately, prominent */}
+          {info?.referral_code && (
+            <div className="mb-4 flex flex-col gap-3 rounded-xl border border-white/10 bg-dark-900/40 p-4 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <div className="text-xs font-medium uppercase tracking-wider text-dark-400">
+                  {t('referral.codeLabel', 'Реферальный код')}
+                </div>
+                <div className="mt-1 font-mono text-2xl font-bold tracking-[0.3em] text-dark-50">
+                  {info.referral_code}
+                </div>
+              </div>
+              <button
+                onClick={() => copyLink(info?.referral_code || '', 'code')}
+                className={`btn-secondary shrink-0 px-4 ${
+                  copiedLink === 'code' ? 'bg-success-500 text-white hover:bg-success-500' : ''
+                }`}
+              >
+                {copiedLink === 'code' ? <CheckIcon /> : <CopyIcon />}
+                <span className="ml-2">
+                  {copiedLink === 'code' ? t('referral.copied') : t('referral.copyLink')}
+                </span>
+              </button>
+            </div>
+          )}
+
+          {/* Bot referral link */}
           {botReferralLink && (
             <div>
               <div className="mb-1.5 flex items-center gap-2 text-sm font-medium text-dark-300">
@@ -274,65 +275,62 @@ export default function Referral() {
                   value={botReferralLink}
                   className="input flex-1 text-sm"
                 />
-                <button
-                  onClick={() => copyLink(botReferralLink, 'bot')}
-                  className={`btn-primary shrink-0 px-4 ${
-                    copiedLink === 'bot' ? 'bg-success-500 hover:bg-success-500' : ''
-                  }`}
-                >
-                  {copiedLink === 'bot' ? <CheckIcon /> : <CopyIcon />}
-                  <span className="ml-2">
-                    {copiedLink === 'bot' ? t('referral.copied') : t('referral.copyLink')}
-                  </span>
-                </button>
+                <div className="flex gap-2">
+                  <button
+                    onClick={() => copyLink(botReferralLink, 'bot')}
+                    className={`btn-primary shrink-0 px-4 ${
+                      copiedLink === 'bot' ? 'bg-success-500 hover:bg-success-500' : ''
+                    }`}
+                  >
+                    {copiedLink === 'bot' ? <CheckIcon /> : <CopyIcon />}
+                    <span className="ml-2">
+                      {copiedLink === 'bot' ? t('referral.copied') : t('referral.copyLink')}
+                    </span>
+                  </button>
+                  <button
+                    onClick={shareLink}
+                    className="btn-secondary flex shrink-0 items-center px-4"
+                  >
+                    <ShareIcon className="h-4 w-4" />
+                    <span className="ml-2">{t('referral.shareButton')}</span>
+                  </button>
+                </div>
               </div>
             </div>
           )}
-          {/* Cabinet link */}
-          <div>
-            <div className="mb-1.5 flex items-center gap-2 text-sm font-medium text-dark-300">
-              <LinkIcon className="h-4 w-4 text-accent-400" />
-              {t('referral.cabinetLink')}
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <input type="text" readOnly value={referralLink} className="input flex-1 text-sm" />
-              <div className="flex gap-2">
-                <button
-                  onClick={() => copyLink(referralLink, 'cabinet')}
-                  disabled={!referralLink}
-                  className={`btn-primary shrink-0 px-4 ${
-                    copiedLink === 'cabinet' ? 'bg-success-500 hover:bg-success-500' : ''
-                  } ${!referralLink ? 'cursor-not-allowed opacity-50' : ''}`}
-                >
-                  {copiedLink === 'cabinet' ? <CheckIcon /> : <CopyIcon />}
-                  <span className="ml-2">
-                    {copiedLink === 'cabinet' ? t('referral.copied') : t('referral.copyLink')}
-                  </span>
-                </button>
-                <button
-                  onClick={shareLink}
-                  disabled={!referralLink}
-                  className={`btn-secondary flex shrink-0 items-center px-4 ${
-                    !referralLink ? 'cursor-not-allowed opacity-50' : ''
-                  }`}
-                >
-                  <ShareIcon className="h-4 w-4" />
-                  <span className="ml-2">{t('referral.shareButton')}</span>
-                </button>
-              </div>
-            </div>
+
+          <p className="mt-3 text-sm text-dark-500">
+            {t('referral.shareHint', { percent: info?.commission_percent || 0 })}
+          </p>
+        </div>
+      </div>
+
+      {/* Stats — total referrals / earnings / commission */}
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
+        <div className="bento-card-hover glass-card col-span-2 md:col-span-1">
+          <div className="text-sm text-dark-400">{t('referral.stats.totalReferrals')}</div>
+          <div className="stat-value mt-1">{info?.total_referrals || 0}</div>
+          <div className="mt-1 text-sm text-dark-500">
+            {info?.active_referrals || 0} {t('referral.stats.activeReferrals').toLowerCase()}
           </div>
         </div>
-        <p className="mt-3 text-sm text-dark-500">
-          {t('referral.shareHint', { percent: info?.commission_percent || 0 })}
-        </p>
+        <div className="bento-card-hover glass-card">
+          <div className="text-sm text-dark-400">{t('referral.stats.totalEarnings')}</div>
+          <div className="stat-value mt-1 text-success-400">
+            {formatPositive(info?.total_earnings_rubles || 0)}
+          </div>
+        </div>
+        <div className="bento-card-hover glass-card">
+          <div className="text-sm text-dark-400">{t('referral.stats.commissionRate')}</div>
+          <div className="stat-value mt-1 text-accent-400">{info?.commission_percent || 0}%</div>
+        </div>
       </div>
 
       {/* Program Terms */}
       {programTerms}
 
       {/* Referrals List */}
-      <div className="bento-card">
+      <div className="bento-card glass-card">
         <h2 className="mb-4 text-lg font-semibold text-dark-100">{t('referral.yourReferrals')}</h2>
         {referralList?.items && referralList.items.length > 0 ? (
           <div className="space-y-3">
@@ -369,7 +367,7 @@ export default function Referral() {
 
       {/* Earnings History */}
       {earnings?.items && earnings.items.length > 0 && (
-        <div className="bento-card">
+        <div className="bento-card glass-card">
           <h2 className="mb-4 text-lg font-semibold text-dark-100">
             {t('referral.earningsHistory')}
           </h2>
@@ -403,7 +401,7 @@ export default function Referral() {
 
       {/* Status: none — Become a Partner CTA */}
       {terms?.partner_section_visible !== false && showApplySection && (
-        <div className="bento-card">
+        <div className="bento-card glass-card">
           <div className="flex items-start gap-4">
             <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-accent-500/10 text-accent-400">
               <PartnerIcon className="h-8 w-8" />
@@ -534,7 +532,7 @@ export default function Referral() {
         <div id="withdrawal-section" className="space-y-6">
           {/* Withdrawal Balance Card */}
           {withdrawalBalance && (
-            <div className="bento-card">
+            <div className="bento-card glass-card">
               <div className="mb-4 flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/10 text-accent-400">
                   <WalletIcon className="h-8 w-8" />
@@ -607,7 +605,7 @@ export default function Referral() {
           )}
 
           {/* Withdrawal History */}
-          <div className="bento-card">
+          <div className="bento-card glass-card">
             <h2 className="mb-4 text-lg font-semibold text-dark-100">
               {t('referral.withdrawal.history')}
             </h2>
