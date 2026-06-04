@@ -305,24 +305,36 @@ export default function Referral() {
         </div>
       </div>
 
-      {/* Stats — total referrals / earnings / commission */}
-      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-4">
-        <div className="bento-card-hover glass-card col-span-2 md:col-span-1">
-          <div className="text-sm text-dark-400">{t('referral.stats.totalReferrals')}</div>
-          <div className="stat-value mt-1">{info?.total_referrals || 0}</div>
-          <div className="mt-1 text-sm text-dark-500">
-            {info?.active_referrals || 0} {t('referral.stats.activeReferrals').toLowerCase()}
+      {/* Stats — combined into one compact card with dividers */}
+      <div className="bento-card glass-card">
+        <div className="grid grid-cols-3 divide-x divide-white/10">
+          <div className="px-2 text-center sm:px-4">
+            <div className="text-xs text-dark-400 sm:text-sm">
+              {t('referral.stats.totalReferrals')}
+            </div>
+            <div className="mt-1 text-lg font-bold text-dark-50 sm:text-2xl">
+              {info?.total_referrals || 0}
+            </div>
+            <div className="mt-0.5 text-[11px] text-dark-500 sm:text-xs">
+              {info?.active_referrals || 0} {t('referral.stats.activeReferrals').toLowerCase()}
+            </div>
           </div>
-        </div>
-        <div className="bento-card-hover glass-card">
-          <div className="text-sm text-dark-400">{t('referral.stats.totalEarnings')}</div>
-          <div className="stat-value mt-1 text-success-400">
-            {formatPositive(info?.total_earnings_rubles || 0)}
+          <div className="px-2 text-center sm:px-4">
+            <div className="text-xs text-dark-400 sm:text-sm">
+              {t('referral.stats.totalEarnings')}
+            </div>
+            <div className="mt-1 text-lg font-bold text-success-400 sm:text-2xl">
+              {formatPositive(info?.total_earnings_rubles || 0)}
+            </div>
           </div>
-        </div>
-        <div className="bento-card-hover glass-card">
-          <div className="text-sm text-dark-400">{t('referral.stats.commissionRate')}</div>
-          <div className="stat-value mt-1 text-accent-400">{info?.commission_percent || 0}%</div>
+          <div className="px-2 text-center sm:px-4">
+            <div className="text-xs text-dark-400 sm:text-sm">
+              {t('referral.stats.commissionRate')}
+            </div>
+            <div className="mt-1 text-lg font-bold text-accent-400 sm:text-2xl">
+              {info?.commission_percent || 0}%
+            </div>
+          </div>
         </div>
       </div>
 
