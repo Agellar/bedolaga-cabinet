@@ -71,7 +71,7 @@ export default function Balance() {
   }> | null>(null);
   const [promoSelectCode, setPromoSelectCode] = useState<string | null>(null);
   const [transactionsPage, setTransactionsPage] = useState(1);
-  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(true);
 
   const { data: transactions, isLoading } = useQuery<PaginatedResponse<Transaction>>({
     queryKey: ['transactions', transactionsPage],
@@ -194,23 +194,40 @@ export default function Balance() {
         <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('balance.title')}</h1>
       </motion.div>
 
-      {/* Balance Card — flat surface; the giant numeric carries the
-          weight. The previous accent gradient + glow leaked accent into
-          decoration (DESIGN.md Tunable-but-Scarce Rule) and read as the
-          SaaS hero-metric template. */}
+      {/* Balance hero — aurora glass (fork restyle). Theme-aware text classes
+          (text-dark-*) adapt to light/dark automatically. */}
       <motion.div variants={staggerItem}>
-        <Card>
-          <div className="mb-2 text-sm text-dark-400">{t('balance.currentBalance')}</div>
-          <div className="text-4xl font-bold text-dark-50 sm:text-5xl">
-            {formatAmount(balanceData?.balance_rubles || 0)}
-            <span className="ml-2 text-2xl text-dark-400">{currencySymbol}</span>
+        <Card className="aurora-hero" size="xl">
+          <div className="relative z-10 flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="mb-2 text-sm font-medium text-dark-300">
+                {t('balance.currentBalance')}
+              </div>
+              <div className="text-4xl font-bold tracking-tight text-dark-50 sm:text-5xl">
+                {formatAmount(balanceData?.balance_rubles || 0)}
+                <span className="ml-2 text-2xl font-semibold text-dark-400">{currencySymbol}</span>
+              </div>
+            </div>
+            <Button
+              size="lg"
+              onClick={() =>
+                navigate(
+                  paymentMethods?.length === 1
+                    ? `/balance/top-up/${paymentMethods[0].id}`
+                    : '/balance/top-up',
+                )
+              }
+              className="cta-attention h-14 w-full px-8 text-base font-semibold sm:w-auto"
+            >
+              {`+ ${t('balance.topUpBalance')}`}
+            </Button>
           </div>
         </Card>
       </motion.div>
 
       {/* Promo Code Section */}
       <motion.div variants={staggerItem}>
-        <Card>
+        <Card className="glass-card">
           <h2 className="mb-4 text-lg font-semibold text-dark-100">
             {t('balance.promocode.title')}
           </h2>
@@ -297,53 +314,9 @@ export default function Balance() {
         </Card>
       </motion.div>
 
-      {/* Payment Methods */}
-      {paymentMethods && paymentMethods.length > 0 && (
-        <motion.div variants={staggerItem}>
-          <Card>
-            <h2 className="mb-4 text-lg font-semibold text-dark-100">
-              {t('balance.topUpBalance')}
-            </h2>
-            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {paymentMethods.map((method) => {
-                const methodKey = method.id.toLowerCase().replace(/-/g, '_');
-                const translatedName = t(`balance.paymentMethods.${methodKey}.name`, {
-                  defaultValue: '',
-                });
-                const translatedDesc = t(`balance.paymentMethods.${methodKey}.description`, {
-                  defaultValue: '',
-                });
-
-                return (
-                  <Card
-                    key={method.id}
-                    interactive={method.is_available}
-                    className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
-                    onClick={() => method.is_available && navigate(`/balance/top-up/${method.id}`)}
-                  >
-                    <div className="font-semibold text-dark-100">
-                      {translatedName || method.name}
-                    </div>
-                    {(translatedDesc || method.description) && (
-                      <div className="mt-1 text-sm text-dark-500">
-                        {translatedDesc || method.description}
-                      </div>
-                    )}
-                    <div className="mt-3 text-xs text-dark-600">
-                      {formatAmount(method.min_amount_kopeks / 100, 0)} {t('common.rangeTo', 'to')}{' '}
-                      {formatAmount(method.max_amount_kopeks / 100, 0)} {currencySymbol}
-                    </div>
-                  </Card>
-                );
-              })}
-            </div>
-          </Card>
-        </motion.div>
-      )}
-
       {/* Transaction History */}
       <motion.div variants={staggerItem}>
-        <Card className="overflow-hidden">
+        <Card className="glass-card overflow-hidden">
           <button
             onClick={() => setIsHistoryOpen(!isHistoryOpen)}
             className="flex w-full items-center justify-between text-left"
@@ -466,7 +439,7 @@ export default function Balance() {
       {/* Saved Cards Navigation */}
       {savedCardsData?.recurrent_enabled && (
         <motion.div variants={staggerItem}>
-          <Card interactive onClick={() => navigate('/balance/saved-cards')}>
+          <Card interactive className="glass-card" onClick={() => navigate('/balance/saved-cards')}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <CreditCardIcon className="h-5 w-5 text-dark-400" />

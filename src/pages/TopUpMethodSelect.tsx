@@ -44,7 +44,7 @@ export default function TopUpMethodSelect() {
       </motion.div>
 
       <motion.div variants={staggerItem}>
-        <Card>
+        <Card className="glass-card">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
               <div className="h-8 w-8 animate-spin rounded-full border-2 border-accent-500 border-t-transparent" />
@@ -68,7 +68,7 @@ export default function TopUpMethodSelect() {
                   <Card
                     key={method.id}
                     interactive={method.is_available}
-                    className={!method.is_available ? 'cursor-not-allowed opacity-50' : ''}
+                    className={`glass-card ${!method.is_available ? 'cursor-not-allowed opacity-50' : ''}`}
                     onClick={() => method.is_available && handleMethodClick(method.id)}
                   >
                     <div className="flex items-center gap-3">

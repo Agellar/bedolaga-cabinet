@@ -1,0 +1,147 @@
+/* ============================================================================
+   Aurora glass theme — CUSTOM FORK LAYER (isolated for low upstream-merge conflict)
+   Keep all bespoke visual overrides here in their own file. Unlayered rules sit
+   above Tailwind's @layer cascade, so these reliably win over utility classes
+   on <Card> without !important wars. Toggle a look by adding/removing a class
+   in the page — base components stay untouched.
+   ========================================================================== */
+
+:root {
+  /* Aurora accent stops (RGB triplets, reuse the live accent token) */
+  --aurora-1: var(--color-accent-500); /* brand accent */
+  --aurora-2: 168, 85, 247; /* violet  */
+  --aurora-3: 34, 211, 238; /* cyan    */
+}
+
+/* ---- Global aurora atmosphere ------------------------------------------ */
+/* Painted on body::before at z-index:-1 — same proven layer as the app's
+   BackgroundRenderer, so it sits above the base bg but behind all content.
+   Zero component edits → nothing to merge-conflict on upstream pulls.
+   Accent stop (--aurora-1) follows the live theme accent, so changing the
+   accent colour from the dashboard recolours the whole atmosphere. */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(58% 48% at 14% -6%, rgba(var(--aurora-1), 0.18), transparent 60%),
+    radial-gradient(52% 44% at 92% 4%, rgba(var(--aurora-2), 0.14), transparent 60%),
+    radial-gradient(48% 50% at 60% 108%, rgba(var(--aurora-3), 0.11), transparent 60%);
+}
+.light body::before,
+body.light::before {
+  background:
+    radial-gradient(58% 48% at 14% -6%, rgba(var(--aurora-1), 0.14), transparent 60%),
+    radial-gradient(52% 44% at 92% 4%, rgba(var(--aurora-2), 0.1), transparent 62%),
+    radial-gradient(48% 50% at 60% 108%, rgba(var(--aurora-3), 0.08), transparent 62%);
+}
+
+/* Opt-in page-scoped variant (kept for flexibility) */
+.aurora-bg::before {
+  content: '';
+  position: fixed;
+  inset: 0 0 auto 0;
+  height: 70vh;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(42% 55% at 18% 0%, rgba(var(--aurora-1), 0.16), transparent 72%),
+    radial-gradient(38% 48% at 84% 6%, rgba(var(--aurora-2), 0.13), transparent 72%),
+    radial-gradient(34% 42% at 58% 0%, rgba(var(--aurora-3), 0.09), transparent 72%);
+  filter: blur(42px);
+}
+
+/* ---- Attention CTA (pulsing accent ring + glow) ------------------------ */
+@keyframes ctaPulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 0 0 rgba(var(--color-accent-500), 0.5),
+      0 10px 26px -8px rgba(var(--color-accent-500), 0.55);
+  }
+  50% {
+    box-shadow:
+      0 0 0 12px rgba(var(--color-accent-500), 0),
+      0 12px 30px -6px rgba(var(--color-accent-500), 0.75);
+  }
+}
+.cta-attention {
+  animation: ctaPulse 2.2s ease-in-out infinite;
+}
+.cta-attention:hover {
+  animation-play-state: paused;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cta-attention {
+    animation: none;
+  }
+}
+
+/* ---- Glassmorphic surface (overrides Card's flat bg/border) ------------ */
+.glass-card {
+  background: linear-gradient(
+    135deg,
+    rgba(var(--color-dark-800), 0.55),
+    rgba(var(--color-dark-900), 0.42)
+  );
+  backdrop-filter: blur(16px) saturate(140%);
+  -webkit-backdrop-filter: blur(16px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.07),
+    0 8px 30px -14px rgba(0, 0, 0, 0.55);
+}
+.glass-card:hover {
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* ---- Accent aurora hero (balance number) ------------------------------- */
+.aurora-hero {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background:
+    linear-gradient(135deg, rgba(var(--color-accent-600), 0.3), rgba(var(--aurora-2), 0.16)),
+    rgba(var(--color-dark-900), 0.5);
+  backdrop-filter: blur(18px) saturate(150%);
+  -webkit-backdrop-filter: blur(18px) saturate(150%);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.12),
+    0 14px 44px -16px rgba(var(--color-accent-500), 0.4);
+}
+/* soft light orb bleeding from the corner */
+.aurora-hero::after {
+  content: '';
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  right: -70px;
+  top: -130px;
+  background: radial-gradient(circle, rgba(var(--color-accent-400), 0.5), transparent 62%);
+  filter: blur(28px);
+  pointer-events: none;
+}
+
+/* ---- Light theme tuning ------------------------------------------------- */
+.light .glass-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.72), rgba(255, 255, 255, 0.52));
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.6),
+    0 8px 30px -16px rgba(0, 0, 0, 0.25);
+}
+.light .aurora-hero {
+  background:
+    linear-gradient(135deg, rgba(var(--color-accent-500), 0.2), rgba(var(--aurora-2), 0.1)),
+    rgba(255, 255, 255, 0.62);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .glass-card,
+  .aurora-hero {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}

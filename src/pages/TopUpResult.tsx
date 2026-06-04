@@ -25,7 +25,7 @@ function AmountDisplay({ amountKopeks, label }: { amountKopeks: number; label: s
   const amountRubles = amountKopeks / 100;
 
   return (
-    <div className="mt-4 rounded-xl bg-dark-800/50 px-6 py-4">
+    <div className="glass-card mt-4 rounded-xl px-6 py-4">
       <p className="text-xs text-dark-400">{label}</p>
       <p className="mt-1 text-2xl font-bold text-dark-50">
         {formatAmount(amountRubles)} <span className="text-lg text-dark-400">{currencySymbol}</span>
@@ -332,7 +332,7 @@ export default function TopUpResult() {
   return (
     <div className="flex min-h-dvh items-center justify-center bg-dark-950 px-4">
       <div
-        className="w-full max-w-md rounded-2xl border border-dark-800/50 bg-dark-900/50 p-8"
+        className="glass-card w-full max-w-md rounded-2xl p-8"
         aria-live="polite"
         aria-atomic="true"
       >

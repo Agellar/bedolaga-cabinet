@@ -95,7 +95,7 @@ export default function SavedCards() {
       {/* Loading state */}
       {isLoading && (
         <motion.div variants={staggerItem}>
-          <Card>
+          <Card className="glass-card">
             <div className="space-y-3">
               {[1, 2].map((i) => (
                 <div
@@ -120,7 +120,7 @@ export default function SavedCards() {
       {/* Error state */}
       {isError && (
         <motion.div variants={staggerItem}>
-          <Card>
+          <Card className="glass-card">
             <div className="py-12 text-center">
               <div className="text-error-400">{t('balance.savedCards.loadError')}</div>
             </div>
@@ -131,7 +131,7 @@ export default function SavedCards() {
       {/* Cards List */}
       {!isLoading && !isError && savedCards && savedCards.length > 0 ? (
         <motion.div variants={staggerItem}>
-          <Card>
+          <Card className="glass-card">
             <div className="space-y-3">
               {savedCards.map((card) => (
                 <div
@@ -169,7 +169,7 @@ export default function SavedCards() {
       ) : !isLoading && !isError && savedCards ? (
         /* Empty state - only show when data loaded and empty */
         <motion.div variants={staggerItem}>
-          <Card>
+          <Card className="glass-card">
             <div className="py-12 text-center">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-linear-lg bg-dark-800">
                 <span className="text-3xl">💳</span>

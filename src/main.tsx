@@ -27,6 +27,7 @@ import { initLogoPreload } from './api/branding';
 import { getCachedFullscreenEnabled, isTelegramMobile } from './hooks/useTelegramSDK';
 import { applyTelegramLanguage } from './i18n';
 import './styles/globals.css';
+import './styles/aurora.css';
 
 // Polyfill Object.hasOwn for older iOS/Android WebViews (Safari < 15.4, old Chrome).
 // @telegram-apps/sdk v3 depends on valibot which uses Object.hasOwn internally.
