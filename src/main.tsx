@@ -26,6 +26,12 @@ import { ErrorBoundary } from './components/ErrorBoundary';
 import { initLogoPreload } from './api/branding';
 import { getCachedFullscreenEnabled, isTelegramMobile } from './hooks/useTelegramSDK';
 import { applyTelegramLanguage } from './i18n';
+// Self-hosted fonts (no Google CDN — works in regions where it's blocked, e.g. China).
+// Montserrat Variable covers Latin + Cyrillic; CJK & Arabic/Farsi fall back to
+// system fonts via the Tailwind font stacks (see tailwind.config.js).
+import '@fontsource-variable/montserrat';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
 import './styles/globals.css';
 import './styles/aurora.css';
 

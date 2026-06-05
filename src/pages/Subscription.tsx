@@ -31,6 +31,8 @@ import { DeviceReductionSheet } from '../components/subscription/sheets/DeviceRe
 import { TrafficTopupSheet } from '../components/subscription/sheets/TrafficTopupSheet';
 import { ServerManagementSheet } from '../components/subscription/sheets/ServerManagementSheet';
 import { DeleteSubscriptionSheet } from '../components/subscription/sheets/DeleteSubscriptionSheet';
+import { Sheet } from '../components/ui/Sheet';
+import { QRCodeSVG } from 'qrcode.react';
 
 export default function Subscription() {
   const { t } = useTranslation();
@@ -44,6 +46,7 @@ export default function Subscription() {
   const haptic = useHaptic();
   const [copied, setCopied] = useState(false);
   const [showDeleteSheet, setShowDeleteSheet] = useState(false);
+  const [showQr, setShowQr] = useState(false);
   const destructiveConfirm = useDestructiveConfirm();
 
   // Helper to format price from kopeks
@@ -368,42 +371,124 @@ export default function Subscription() {
 
       {/* Connection link card — prominent aurora-glass, highly readable URL */}
       {subscription && displayedConnectionUrl && !shouldHideConnectionLink && (
-        <div className="aurora-hero rounded-3xl p-5">
-          <div className="relative z-10">
-            <div className="mb-3 flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent-500/15 text-accent-400">
-                <LinkIcon className="h-4 w-4" />
+        <>
+          <div className="aurora-hero rounded-3xl p-5">
+            <div className="relative z-10">
+              <div className="mb-3 flex items-center gap-2.5">
+                <div className="flex h-8 w-8 items-center justify-center rounded-[10px] bg-accent-500/15 text-accent-400">
+                  <LinkIcon className="h-4 w-4" />
+                </div>
+                <h2 className="text-base font-bold tracking-tight text-dark-50">
+                  {t('subscription.connectionLink', 'Ссылка для подключения')}
+                </h2>
               </div>
-              <h2 className="text-base font-bold tracking-tight text-dark-50">
-                {t('subscription.connectionLink', 'Ссылка для подключения')}
-              </h2>
+              <div className="flex gap-2">
+                <code
+                  className="block min-w-0 flex-1 truncate whitespace-nowrap rounded-xl border border-white/10 px-3 py-2.5 font-mono text-xs text-dark-50/85"
+                  style={{ background: 'rgba(0,0,0,0.22)' }}
+                  title={displayedConnectionUrl}
+                >
+                  {displayedConnectionUrl}
+                </code>
+                <button
+                  onClick={() => setShowQr(true)}
+                  className="flex shrink-0 items-center justify-center rounded-xl border border-white/15 bg-white/5 px-3 text-dark-50/80 transition-colors hover:bg-white/10"
+                  aria-label={t('subscription.showQr', 'Показать QR-код')}
+                  title={t('subscription.showQr', 'Показать QR-код')}
+                >
+                  <svg
+                    className="h-[18px] w-[18px]"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
+                  >
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                    <path d="M14 14h3v3M21 14v.01M14 21h.01M17.5 21H21v-3.5" />
+                  </svg>
+                </button>
+                <button
+                  onClick={copyUrl}
+                  className={`flex shrink-0 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold text-white shadow-sm transition-colors ${
+                    copied ? 'bg-success-500' : 'bg-accent-500 hover:bg-accent-600'
+                  }`}
+                  aria-label={t('subscription.copyLink')}
+                  title={t('subscription.copyLink')}
+                >
+                  {copied ? <CheckIcon /> : <CopyIcon />}
+                  <span className="hidden sm:inline">
+                    {copied
+                      ? t('subscription.copied', 'Скопировано')
+                      : t('common.copy', 'Копировать')}
+                  </span>
+                </button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <code
-                className="block min-w-0 flex-1 truncate whitespace-nowrap rounded-xl border border-white/10 px-3 py-2.5 font-mono text-xs text-dark-50/85"
-                style={{ background: 'rgba(0,0,0,0.22)' }}
-                title={displayedConnectionUrl}
-              >
-                {displayedConnectionUrl}
-              </code>
+          </div>
+
+          {/* QR code with the connection link inside */}
+          <Sheet
+            isOpen={showQr}
+            onClose={() => setShowQr(false)}
+            title={t('subscription.connectionQr', 'QR для подключения')}
+            snapPoints={[0.8]}
+          >
+            <div className="relative flex flex-col items-center px-4 pb-8">
+              {/* Close button */}
               <button
-                onClick={copyUrl}
-                className={`flex shrink-0 items-center gap-1.5 rounded-xl px-4 text-sm font-semibold text-white shadow-sm transition-colors ${
-                  copied ? 'bg-success-500' : 'bg-accent-500 hover:bg-accent-600'
-                }`}
-                aria-label={t('subscription.copyLink')}
-                title={t('subscription.copyLink')}
+                onClick={() => setShowQr(false)}
+                className="absolute right-1 top-0 flex h-9 w-9 items-center justify-center rounded-full text-dark-50/50 transition-colors hover:bg-white/10 hover:text-dark-50"
+                aria-label={t('common.close', 'Закрыть')}
+                title={t('common.close', 'Закрыть')}
               >
-                {copied ? <CheckIcon /> : <CopyIcon />}
-                <span className="hidden sm:inline">
+                <CloseIcon className="h-5 w-5" />
+              </button>
+
+              <p className="mb-6 max-w-xs text-center text-sm text-dark-400">
+                {t(
+                  'subscription.qrScanHint',
+                  'Отсканируйте QR-код в VPN-приложении, чтобы добавить подписку',
+                )}
+              </p>
+              <div className="rounded-3xl bg-white p-5">
+                <QRCodeSVG
+                  value={displayedConnectionUrl}
+                  size={240}
+                  level="M"
+                  includeMargin={false}
+                  className="h-60 w-60"
+                />
+              </div>
+              <p className="mt-6 w-full max-w-full truncate text-center font-mono text-[11px] text-dark-500">
+                {displayedConnectionUrl}
+              </p>
+              <div className="mt-5 flex w-full max-w-xs flex-col gap-2">
+                <button
+                  onClick={copyUrl}
+                  className={`flex items-center justify-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold text-white transition-colors ${
+                    copied ? 'bg-success-500' : 'bg-accent-500 hover:bg-accent-600'
+                  }`}
+                >
+                  {copied ? <CheckIcon /> : <CopyIcon />}
                   {copied
                     ? t('subscription.copied', 'Скопировано')
                     : t('common.copy', 'Копировать')}
-                </span>
-              </button>
+                </button>
+                <button
+                  onClick={() => setShowQr(false)}
+                  className="rounded-xl border border-white/15 px-5 py-2.5 text-sm font-medium text-dark-200 transition-colors hover:bg-white/5"
+                >
+                  {t('common.close', 'Закрыть')}
+                </button>
+              </div>
             </div>
-          </div>
-        </div>
+          </Sheet>
+        </>
       )}
 
       {/* My Devices — moved under the connection link (rename / delete) */}
@@ -623,7 +708,7 @@ export default function Subscription() {
               {t('subscription.additionalOptions.title')}
             </h2>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-4">
               {/* Buy Devices */}
               <DeviceTopupSheet
                 open={showDeviceTopup}

@@ -113,18 +113,50 @@ export default {
         // 'Twemoji Country Flags' is first in every stack so Windows renders flag
         // emoji (it's unicode-range-scoped to flag codepoints only — see globals.css —
         // so it never affects any other glyph). Global root fix for flags everywhere.
+        // Montserrat (self-hosted) for Latin/Cyrillic. CJK (Chinese) and
+        // Arabic/Farsi glyphs fall through per-glyph to system fonts that ship
+        // those scripts — keeps the bundle small while staying readable in every
+        // localisation (en / zh / fa). 'Twemoji Country Flags' stays first for flags.
         sans: [
           'Twemoji Country Flags',
-          'Manrope',
+          'Montserrat Variable',
+          'Montserrat',
           'system-ui',
           '-apple-system',
           'BlinkMacSystemFont',
           'Segoe UI',
           'Roboto',
+          // Chinese (CJK) system fallbacks
+          'PingFang SC',
+          'Hiragino Sans GB',
+          'Microsoft YaHei',
+          'Noto Sans CJK SC',
+          'Noto Sans SC',
+          // Arabic / Persian (Farsi) fallbacks
+          'Vazirmatn',
+          'Noto Sans Arabic',
+          'Tahoma',
           'sans-serif',
         ],
-        display: ['Twemoji Country Flags', 'Outfit', 'Manrope', 'system-ui', 'sans-serif'],
-        mono: ['Twemoji Country Flags', 'IBM Plex Mono', 'ui-monospace', 'monospace'],
+        display: [
+          'Twemoji Country Flags',
+          'Montserrat Variable',
+          'Montserrat',
+          'system-ui',
+          'PingFang SC',
+          'Microsoft YaHei',
+          'Noto Sans Arabic',
+          'sans-serif',
+        ],
+        mono: [
+          'Twemoji Country Flags',
+          'IBM Plex Mono',
+          'ui-monospace',
+          'SFMono-Regular',
+          'Menlo',
+          'Consolas',
+          'monospace',
+        ],
       },
       borderRadius: {
         bento: '24px',
