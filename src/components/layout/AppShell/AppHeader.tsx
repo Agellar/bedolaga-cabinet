@@ -277,26 +277,23 @@ export function AppHeader({
                 <LanguageSwitcher />
               </div>
 
-              {/* Mobile menu button */}
+              {/* Mobile menu button — labelled with an animated accent outline */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   haptic.impact('light');
                   setMobileMenuOpen(!mobileMenuOpen);
                 }}
-                className={`rounded-xl p-2.5 transition-all duration-200 ${
-                  mobileMenuOpen
-                    ? 'bg-dark-700 text-dark-100'
-                    : 'text-dark-400 hover:bg-dark-800 hover:text-dark-100'
-                }`}
+                className="hover-border-gradient flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold text-dark-100"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
               >
                 {mobileMenuOpen ? (
-                  <CloseIcon className="h-6 w-6" />
+                  <CloseIcon className="h-5 w-5" />
                 ) : (
-                  <MenuIcon className="h-6 w-6" />
+                  <MenuIcon className="h-5 w-5" />
                 )}
+                <span>{mobileMenuOpen ? t('common.close', 'Закрыть') : t('nav.menu', 'Меню')}</span>
               </button>
             </div>
           </div>

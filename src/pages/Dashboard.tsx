@@ -103,7 +103,7 @@ export default function Dashboard() {
       : '/subscription/purchase';
   const quickActions = [
     { label: t('dashboard.quick.topup', 'Пополнить'), icon: CreditCardIcon, to: '/balance/top-up' },
-    { label: t('dashboard.quick.renew', 'Продлить'), icon: SubscriptionIcon, to: renewTo },
+    { label: t('dashboard.quick.tariffs', 'Тарифы'), icon: SubscriptionIcon, to: renewTo },
     { label: t('dashboard.quick.connect', 'Подключить'), icon: DevicesIcon, to: '/subscription' },
     { label: t('dashboard.quick.invite', 'Пригласить'), icon: UsersIcon, to: '/referral' },
   ];
@@ -318,12 +318,14 @@ export default function Dashboard() {
           <button
             key={a.to}
             onClick={() => navigate(a.to)}
-            className="flex flex-col items-center gap-2 rounded-2xl border border-accent-500/25 bg-accent-500/10 px-2 py-3.5 text-center transition-all hover:-translate-y-0.5 hover:border-accent-500/45 hover:bg-accent-500/15 active:scale-95"
+            className="glass-card group flex flex-col items-center gap-2 rounded-2xl px-2 py-3.5 text-center transition-all hover:-translate-y-0.5 active:scale-95"
           >
-            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-500/20 text-accent-300 shadow-[0_0_14px_-2px_rgba(var(--color-accent-500),0.45)]">
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/5 text-accent-400 transition-colors duration-200 group-hover:bg-accent-500/15 group-hover:text-accent-300">
               <a.icon className="h-5 w-5" />
             </span>
-            <span className="text-[11px] font-semibold text-dark-100 sm:text-xs">{a.label}</span>
+            <span className="text-[11px] font-semibold text-dark-200 transition-colors duration-200 group-hover:text-dark-50 sm:text-xs">
+              {a.label}
+            </span>
           </button>
         ))}
       </div>

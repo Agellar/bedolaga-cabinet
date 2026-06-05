@@ -1,6 +1,5 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
-import { HoverBorderGradient } from '../ui/hover-border-gradient';
 import { SubscriptionIcon } from '@/components/icons';
 import type { Subscription } from '../../types';
 
@@ -24,8 +23,6 @@ export default function PurchaseCTAButton({
 
   // Daily tariffs renew automatically — no manual renewal button needed in multi-tariff
   if (isMultiTariff && isDaily && !isExpired) return null;
-
-  const accentColor = isExpired ? 'rgb(var(--color-critical-500))' : 'rgb(var(--color-accent-400))';
 
   const buttonText = isExpired
     ? t('subscription.getSubscription')
@@ -51,29 +48,26 @@ export default function PurchaseCTAButton({
       : '/subscription/purchase';
 
   return (
-    <Link to={linkTo} className="block">
-      <HoverBorderGradient
-        accentColor={accentColor}
-        duration={4}
-        className="group relative w-full cursor-pointer overflow-hidden rounded-2xl"
+    <Link
+      to={linkTo}
+      className="accent-ring group relative block w-full cursor-pointer overflow-hidden rounded-2xl"
+    >
+      {/* Solid, centered fill — deliberately distinct from the translucent
+          glass buttons around it so the primary action stands out. */}
+      <div
+        className="relative flex flex-col items-center justify-center rounded-2xl px-5 py-3.5 text-center"
+        style={{
+          background: isExpired
+            ? 'linear-gradient(135deg, rgb(var(--color-critical-500)), #ff6b35)'
+            : 'linear-gradient(135deg, rgb(var(--color-accent-500)), rgb(var(--color-accent-600)))',
+        }}
       >
-        {/* Solid, centered fill — deliberately distinct from the translucent
-            glass buttons around it so the primary action stands out. */}
-        <div
-          className="relative flex flex-col items-center justify-center rounded-[14px] px-5 py-3.5 text-center transition-colors duration-300"
-          style={{
-            background: isExpired
-              ? 'linear-gradient(135deg, rgb(var(--color-critical-500)), #ff6b35)'
-              : 'linear-gradient(135deg, rgb(var(--color-accent-500)), rgb(var(--color-accent-600)))',
-          }}
-        >
-          <div className="flex items-center gap-2">
-            <SubscriptionIcon className="h-5 w-5 text-white" />
-            <span className="text-[17px] font-bold tracking-tight text-white">{buttonText}</span>
-          </div>
-          <span className="mt-0.5 text-[11px] text-white/70">{hintText}</span>
+        <div className="flex items-center gap-2">
+          <SubscriptionIcon className="h-5 w-5 text-white" />
+          <span className="text-[17px] font-bold tracking-tight text-white">{buttonText}</span>
         </div>
-      </HoverBorderGradient>
+        <span className="mt-0.5 text-[11px] text-white/70">{hintText}</span>
+      </div>
     </Link>
   );
 }

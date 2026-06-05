@@ -278,11 +278,15 @@ export default function Referral() {
                 <div className="flex gap-2">
                   <button
                     onClick={() => copyLink(botReferralLink, 'bot')}
-                    className={`btn-primary shrink-0 px-4 ${
+                    className={`btn-primary flex shrink-0 items-center px-4 ${
                       copiedLink === 'bot' ? 'bg-success-500 hover:bg-success-500' : ''
                     }`}
                   >
-                    {copiedLink === 'bot' ? <CheckIcon /> : <CopyIcon />}
+                    {copiedLink === 'bot' ? (
+                      <CheckIcon className="h-4 w-4" />
+                    ) : (
+                      <CopyIcon className="h-4 w-4" />
+                    )}
                     <span className="ml-2">
                       {copiedLink === 'bot' ? t('referral.copied') : t('referral.copyLink')}
                     </span>

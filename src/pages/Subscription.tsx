@@ -364,10 +364,8 @@ export default function Subscription() {
         </h1>
       </div>
 
-      {/* Renew / purchase CTA — raised to the top with an attention pulse */}
-      <div className="cta-attention rounded-2xl">
-        <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
-      </div>
+      {/* Renew / purchase CTA — raised to the top (clean accent outline) */}
+      <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
 
       {/* Connection link card — prominent aurora-glass, highly readable URL */}
       {subscription && displayedConnectionUrl && !shouldHideConnectionLink && (

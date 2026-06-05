@@ -217,7 +217,7 @@ export default function Balance() {
                     : '/balance/top-up',
                 )
               }
-              className="cta-attention h-14 w-full px-8 text-base font-semibold sm:w-auto"
+              className="accent-ring h-14 w-full px-8 text-base font-semibold sm:w-auto"
             >
               {`+ ${t('balance.topUpBalance')}`}
             </Button>
