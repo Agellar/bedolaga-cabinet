@@ -339,12 +339,13 @@ const NewsCardWrapper = memo(function NewsCardWrapper({
 
 const NEWS_LIMIT = 6;
 
-export default function NewsSection() {
-  const { t } = useTranslation();
+export default function NewsSection({ compact = false }: { compact?: boolean } = {}) {
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const haptic = useHapticFeedback();
   const [filter, setFilter] = useState<string>('');
   const [limit, setLimit] = useState(NEWS_LIMIT);
+  const [expanded, setExpanded] = useState(false);
 
   const categoryParam = filter || undefined;
 
@@ -400,6 +401,61 @@ export default function NewsSection() {
   // This prevents the skeleton from briefly flashing when there are no articles.
   if (items.length === 0) {
     return null;
+  }
+
+  // Compact digest — condensed list of recent items (used on the dashboard).
+  // "Все новости" expands into the full layout below, in place.
+  if (compact && !expanded) {
+    const digest = items.slice(0, 5);
+    return (
+      <section className="bento-card">
+        <div className="mb-3 flex items-center gap-2.5">
+          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-accent-400 to-accent-600">
+            <NewsIcon className="h-[18px] w-[18px] text-dark-950" />
+          </div>
+          <span className="font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-dark-500">
+            {t('news.title')}
+          </span>
+        </div>
+        <div className="divide-y divide-white/5">
+          {digest.map((item) => {
+            const color = safeColor(item.category_color);
+            return (
+              <button
+                key={item.id}
+                onClick={() => handleCardClick(item.slug)}
+                className="group flex w-full items-center gap-3 py-2.5 text-left"
+              >
+                <span
+                  className="h-2 w-2 shrink-0 rounded-full"
+                  style={{ background: color, boxShadow: `0 0 6px ${color}80` }}
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="truncate text-sm font-medium text-dark-100 transition-colors group-hover:text-white">
+                    {item.title}
+                  </div>
+                  <div className="mt-0.5 truncate text-[11px] text-dark-500">
+                    {item.category}
+                    {item.published_at
+                      ? ` · ${new Date(item.published_at).toLocaleDateString(i18n.language)}`
+                      : ''}
+                  </div>
+                </div>
+                <ArrowIcon className="h-4 w-4 shrink-0 text-dark-600 transition-transform group-hover:translate-x-0.5 group-hover:text-accent-400" />
+              </button>
+            );
+          })}
+        </div>
+        {(items.length > digest.length || total > items.length) && (
+          <button
+            onClick={() => setExpanded(true)}
+            className="mt-3 w-full rounded-xl border border-white/10 py-2.5 text-[13px] font-medium text-dark-300 transition-colors hover:border-accent-400/30 hover:text-accent-400"
+          >
+            {t('news.showAll', 'Все новости')}
+          </button>
+        )}
+      </section>
+    );
   }
 
   return (

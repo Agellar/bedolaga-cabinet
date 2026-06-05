@@ -21,7 +21,17 @@ import { promoApi } from '../api/promo';
 import PendingGiftCard from '../components/dashboard/PendingGiftCard';
 import SubscriptionListCard from '../components/subscription/SubscriptionListCard';
 import { API } from '../config/constants';
-import { ChevronRightIcon, StarIcon } from '@/components/icons';
+import {
+  ChevronRightIcon,
+  StarIcon,
+  CreditCardIcon,
+  SubscriptionIcon,
+  DevicesIcon,
+  UsersIcon,
+  CheckIcon,
+  ShareIcon,
+} from '@/components/icons';
+import { copyToClipboard } from '../utils/clipboard';
 
 export default function Dashboard() {
   const { t } = useTranslation();
@@ -33,6 +43,25 @@ export default function Dashboard() {
   const [showOnboarding, setShowOnboarding] = useState(false);
   const blockingType = useBlockingStore((state) => state.blockingType);
   const [trialError, setTrialError] = useState<string | null>(null);
+  const [referralCopied, setReferralCopied] = useState(false);
+
+  const shareReferral = async () => {
+    const link = referralInfo?.bot_referral_link || '';
+    if (!link) return;
+    if (navigator.share) {
+      navigator
+        .share({ title: t('referral.title', 'Реферальная программа'), url: link })
+        .catch(() => {});
+      return;
+    }
+    try {
+      await copyToClipboard(link);
+      setReferralCopied(true);
+      setTimeout(() => setReferralCopied(false), 2000);
+    } catch {
+      // ignore clipboard failure
+    }
+  };
 
   // Refresh user data on mount
   useEffect(() => {
@@ -65,6 +94,19 @@ export default function Dashboard() {
   });
 
   const subscription = subscriptionResponse?.subscription ?? null;
+
+  // "Продлить" jumps straight into the purchase/renewal flow (multi-tariff →
+  // per-subscription renew, otherwise the purchase page) instead of the overview.
+  const renewTo =
+    isMultiTariff && subscription?.id
+      ? `/subscriptions/${subscription.id}/renew`
+      : '/subscription/purchase';
+  const quickActions = [
+    { label: t('dashboard.quick.topup', 'Пополнить'), icon: CreditCardIcon, to: '/balance/top-up' },
+    { label: t('dashboard.quick.renew', 'Продлить'), icon: SubscriptionIcon, to: renewTo },
+    { label: t('dashboard.quick.connect', 'Подключить'), icon: DevicesIcon, to: '/subscription' },
+    { label: t('dashboard.quick.invite', 'Пригласить'), icon: UsersIcon, to: '/referral' },
+  ];
 
   const { data: trialInfo, isLoading: trialLoading } = useQuery({
     queryKey: ['trial-info'],
@@ -270,6 +312,22 @@ export default function Dashboard() {
         </div>
       </div>
 
+      {/* Quick actions */}
+      <div className="grid grid-cols-4 gap-2 sm:gap-3">
+        {quickActions.map((a) => (
+          <button
+            key={a.to}
+            onClick={() => navigate(a.to)}
+            className="flex flex-col items-center gap-2 rounded-2xl border border-accent-500/25 bg-accent-500/10 px-2 py-3.5 text-center transition-all hover:-translate-y-0.5 hover:border-accent-500/45 hover:bg-accent-500/15 active:scale-95"
+          >
+            <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-accent-500/20 text-accent-300 shadow-[0_0_14px_-2px_rgba(var(--color-accent-500),0.45)]">
+              <a.icon className="h-5 w-5" />
+            </span>
+            <span className="text-[11px] font-semibold text-dark-100 sm:text-xs">{a.label}</span>
+          </button>
+        ))}
+      </div>
+
       {/* Pending Gift Activations */}
       {pendingGifts && pendingGifts.length > 0 && <PendingGiftCard gifts={pendingGifts} />}
 
@@ -378,6 +436,51 @@ export default function Dashboard() {
         refLoading={refLoading}
       />
 
+      {/* Referral teaser */}
+      {referralInfo?.referral_code && (
+        <div className="aurora-hero rounded-3xl p-5">
+          <div className="relative z-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-start gap-3">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-2xl bg-accent-500/15 text-accent-400">
+                <UsersIcon className="h-5 w-5" />
+              </span>
+              <div className="min-w-0">
+                <h3 className="text-base font-bold text-dark-50">
+                  {t('dashboard.referralTeaser.title', 'Приглашай и зарабатывай')}
+                </h3>
+                <p className="mt-0.5 text-sm text-dark-300">
+                  {t('dashboard.referralTeaser.subtitle', {
+                    defaultValue: 'Получай {{percent}}% с пополнений друзей',
+                    percent: referralInfo.commission_percent || 0,
+                  })}
+                </p>
+                <div className="mt-2 inline-flex items-center gap-2 rounded-lg border border-white/10 bg-black/20 px-2.5 py-1">
+                  <span className="text-[10px] uppercase tracking-wider text-dark-400">
+                    {t('referral.codeLabel', 'Код')}
+                  </span>
+                  <span className="font-mono text-sm font-bold tracking-widest text-dark-50">
+                    {referralInfo.referral_code}
+                  </span>
+                </div>
+              </div>
+            </div>
+            <button
+              onClick={shareReferral}
+              className="flex shrink-0 items-center justify-center gap-2 rounded-xl bg-accent-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-accent-600"
+            >
+              {referralCopied ? (
+                <CheckIcon className="h-4 w-4" />
+              ) : (
+                <ShareIcon className="h-4 w-4" />
+              )}
+              {referralCopied
+                ? t('referral.copied', 'Скопировано')
+                : t('referral.shareButton', 'Поделиться')}
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Fortune Wheel Banner */}
       {wheelConfig?.is_enabled && (
         <Link to="/wheel" className="bento-card-hover group flex items-center justify-between">
@@ -394,8 +497,8 @@ export default function Dashboard() {
         </Link>
       )}
 
-      {/* News Section */}
-      <NewsSection />
+      {/* News Section — compact digest on the dashboard */}
+      <NewsSection compact />
 
       {/* Onboarding Tutorial */}
       {showOnboarding && (

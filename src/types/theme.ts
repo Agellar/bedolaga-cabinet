@@ -38,18 +38,21 @@ export const DEFAULT_ENABLED_THEMES: EnabledThemes = {
 };
 
 // Default theme colors
+// Brand palette derived from the "UP" logo (teal/cyan on navy-slate).
+// Tuned for readability: cool near-white text on deep navy (dark),
+// dark slate text on cool-white (light).
 export const DEFAULT_THEME_COLORS: ThemeColors = {
-  accent: '#3b82f6',
+  accent: '#17A8C0',
 
-  darkBackground: '#0a0f1a',
-  darkSurface: '#0f172a',
-  darkText: '#f1f5f9',
-  darkTextSecondary: '#94a3b8',
+  darkBackground: '#0B141B',
+  darkSurface: '#15242E',
+  darkText: '#EAF3F5',
+  darkTextSecondary: '#90A7B1',
 
-  lightBackground: '#F7E7CE',
-  lightSurface: '#FEF9F0',
-  lightText: '#1F1A12',
-  lightTextSecondary: '#7D6B48',
+  lightBackground: '#E8F1F3',
+  lightSurface: '#FBFDFE',
+  lightText: '#0E1D26',
+  lightTextSecondary: '#566F79',
 
   success: '#22c55e',
   warning: '#f59e0b',

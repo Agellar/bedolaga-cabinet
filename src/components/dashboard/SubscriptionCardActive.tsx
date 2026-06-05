@@ -64,7 +64,7 @@ export default function SubscriptionCardActive({
           : isDark
             ? `1px solid ${g.cardBorder}`
             : `1px solid rgba(${zone.mainVarRaw}, 0.14)`,
-        padding: '28px 28px 24px',
+        padding: '18px 20px 16px',
         boxShadow: isDark
           ? g.shadow
           : `0 2px 16px rgba(${zone.mainVarRaw}, 0.07), 0 0 0 1px rgba(${zone.mainVarRaw}, 0.03)`,
@@ -75,7 +75,7 @@ export default function SubscriptionCardActive({
           carried no information and ate visual attention. */}
 
       {/* ─── Header ─── */}
-      <div className="mb-7 flex items-start justify-between">
+      <div className="mb-4 flex items-start justify-between">
         <div>
           {/* Zone indicator */}
           <div className="mb-1 flex items-center gap-2">
@@ -117,24 +117,26 @@ export default function SubscriptionCardActive({
 
           {/* Title */}
           <h2 className="text-lg font-bold tracking-tight text-dark-50">
-            {t('dashboard.trafficUsageTitle')}
+            {isUnlimited
+              ? t('subscription.unlimitedTraffic', 'Безлимитный трафик')
+              : t('dashboard.trafficUsageTitle')}
           </h2>
         </div>
 
         {/* Big percentage / infinity */}
         <div className="text-right">
           {isUnlimited ? (
-            <>
-              <div
-                className="font-display text-[28px] font-extrabold leading-none tracking-tight"
-                style={{ color: zone.mainVar }}
-              >
-                &#8734;
-              </div>
-              <div className="mt-1 font-mono text-[11px] text-dark-50/30">
-                {formatTraffic(usedGb)} {t('dashboard.usedSuffix')}
-              </div>
-            </>
+            <span
+              className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-wider"
+              style={{
+                background: `rgba(${zone.mainVarRaw}, 0.12)`,
+                border: `1px solid rgba(${zone.mainVarRaw}, 0.25)`,
+                color: zone.mainVar,
+              }}
+            >
+              <span className="text-base leading-none">&#8734;</span>
+              {t('subscription.unlimitedTraffic', 'Безлимит')}
+            </span>
           ) : (
             <>
               <div className="font-display text-[38px] font-extrabold leading-none tracking-tight text-dark-50">
@@ -149,15 +151,17 @@ export default function SubscriptionCardActive({
         </div>
       </div>
 
-      {/* ─── Progress Bar ─── */}
-      <div className="mb-6">
-        <TrafficProgressBar
-          usedGb={usedGb}
-          limitGb={subscription.traffic_limit_gb}
-          percent={usedPercent}
-          isUnlimited={isUnlimited}
-        />
-      </div>
+      {/* ─── Progress Bar (only when traffic is limited) ─── */}
+      {!isUnlimited && (
+        <div className="mb-4">
+          <TrafficProgressBar
+            usedGb={usedGb}
+            limitGb={subscription.traffic_limit_gb}
+            percent={usedPercent}
+            isUnlimited={false}
+          />
+        </div>
+      )}
 
       {/* ─── Connect Device Button ─── */}
       {subscription.subscription_url && (
@@ -265,7 +269,7 @@ export default function SubscriptionCardActive({
       )}
 
       {/* ─── Stats row: Tariff + Days Left ─── */}
-      <div className="mb-5 flex gap-2.5">
+      <div className="mb-4 flex gap-2.5">
         {/* Tariff badge — clickable. Neutral chrome: the tariff name has
             no traffic-zone semantics, so tinting it by the traffic zone
             (DESIGN.md Status-Hue Lockout) was wrong. */}
@@ -334,19 +338,23 @@ export default function SubscriptionCardActive({
         </div>
       </div>
 
-      {/* ─── Traffic Refresh ─── */}
-      <div className="mb-5 flex items-center justify-between px-0.5">
-        <button
-          onClick={() => refreshTrafficMutation.mutate()}
-          disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
-          className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium text-dark-50/35 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-50"
-          aria-label={t('common.refresh')}
-        >
-          <RefreshIcon
-            className={`h-3 w-3 ${refreshTrafficMutation.isPending ? 'animate-spin' : ''}`}
-          />
-          {trafficRefreshCooldown > 0 ? `${trafficRefreshCooldown}s` : t('common.refresh')}
-        </button>
+      {/* ─── Footer row (refresh only when limited) ─── */}
+      <div className="flex items-center justify-between px-0.5">
+        {!isUnlimited ? (
+          <button
+            onClick={() => refreshTrafficMutation.mutate()}
+            disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
+            className="flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium text-dark-50/35 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-50"
+            aria-label={t('common.refresh')}
+          >
+            <RefreshIcon
+              className={`h-3 w-3 ${refreshTrafficMutation.isPending ? 'animate-spin' : ''}`}
+            />
+            {trafficRefreshCooldown > 0 ? `${trafficRefreshCooldown}s` : t('common.refresh')}
+          </button>
+        ) : (
+          <span aria-hidden="true" />
+        )}
         <Link
           to={`/subscriptions/${subscription.id}`}
           className="text-[11px] font-medium text-dark-50/25 transition-colors hover:text-dark-50/40"
