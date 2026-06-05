@@ -535,6 +535,88 @@ export default function Subscription() {
         </h1>
       </div>
 
+      {/* Renew / purchase CTA — raised to the top with an attention pulse */}
+      <div className="cta-attention rounded-2xl">
+        <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
+      </div>
+
+      {/* Additional options — moved under the renew CTA; actions 2 per row */}
+      {subscription &&
+        (subscription.is_active || subscription.is_limited) &&
+        !subscription.is_trial &&
+        subscription.device_limit !== 0 && (
+          <div
+            className="relative overflow-hidden rounded-3xl"
+            style={{
+              background: g.cardBg,
+              border: `1px solid ${g.cardBorder}`,
+              boxShadow: g.shadow,
+              padding: '18px 20px',
+            }}
+          >
+            <h2 className="mb-3 text-base font-bold tracking-tight text-dark-50">
+              {t('subscription.additionalOptions.title')}
+            </h2>
+
+            <div className="grid grid-cols-2 gap-3">
+              {/* Buy Devices */}
+              <DeviceTopupSheet
+                open={showDeviceTopup}
+                onOpen={() => setShowDeviceTopup(true)}
+                onClose={() => setShowDeviceTopup(false)}
+                subscription={subscription}
+                subscriptionId={subscriptionId}
+                devicesToAdd={devicesToAdd}
+                onDevicesToAddChange={setDevicesToAdd}
+                purchaseOptions={purchaseOptions}
+                isDark={isDark}
+              />
+
+              {/* Reduce Devices */}
+              <DeviceReductionSheet
+                open={showDeviceReduction}
+                onOpen={() => setShowDeviceReduction(true)}
+                onClose={() => setShowDeviceReduction(false)}
+                subscriptionPresent={!!subscription}
+                subscriptionId={subscriptionId}
+                targetDeviceLimit={targetDeviceLimit}
+                onTargetDeviceLimitChange={setTargetDeviceLimit}
+                isDark={isDark}
+              />
+
+              {/* Buy Traffic */}
+              {subscription.traffic_limit_gb > 0 && (
+                <TrafficTopupSheet
+                  open={showTrafficTopup}
+                  onOpen={() => setShowTrafficTopup(true)}
+                  onClose={() => setShowTrafficTopup(false)}
+                  subscription={subscription}
+                  subscriptionId={subscriptionId}
+                  selectedTrafficPackage={selectedTrafficPackage}
+                  onSelectedTrafficPackageChange={setSelectedTrafficPackage}
+                  purchaseOptions={purchaseOptions}
+                  isDark={isDark}
+                />
+              )}
+
+              {/* Server Management - only in classic mode */}
+              {!isTariffsMode && (
+                <ServerManagementSheet
+                  open={showServerManagement}
+                  onOpen={() => setShowServerManagement(true)}
+                  onClose={() => setShowServerManagement(false)}
+                  subscription={subscription}
+                  subscriptionId={subscriptionId}
+                  selectedServers={selectedServersToUpdate}
+                  onSelectedServersChange={setSelectedServersToUpdate}
+                  purchaseOptions={purchaseOptions}
+                  isDark={isDark}
+                />
+              )}
+            </div>
+          </div>
+        )}
+
       {/* Current Subscription */}
       {subscription ? (
         (() => {
@@ -544,6 +626,7 @@ export default function Subscription() {
           const connectedDevices = devicesData?.total ?? 0;
           const isAtDeviceLimit =
             subscription.device_limit > 0 && connectedDevices >= subscription.device_limit;
+          const showAutopay = !subscription.is_trial && !subscription.is_daily;
 
           return (
             <div
@@ -558,7 +641,7 @@ export default function Subscription() {
                 boxShadow: isDark
                   ? g.shadow
                   : `0 2px 16px ${zone.mainHex}12, 0 0 0 1px ${zone.mainHex}08`,
-                padding: '28px 28px 24px',
+                padding: '18px 20px 16px',
               }}
             >
               {/* Decorative ambient radial + trial shimmer border were
@@ -570,7 +653,7 @@ export default function Subscription() {
                   header badge. */}
 
               {/* ─── Header ─── */}
-              <div className="mb-6 flex items-start justify-between">
+              <div className="mb-4 flex items-start justify-between">
                 <div>
                   {/* Zone indicator */}
                   <div className="mb-1 flex items-center gap-2">
@@ -633,7 +716,7 @@ export default function Subscription() {
               {/* ─── Traffic Limited Banner ─── */}
               {subscription.is_limited && (
                 <div
-                  className="mb-6 rounded-[14px] p-4"
+                  className="mb-4 rounded-[14px] p-4"
                   style={{
                     background:
                       'linear-gradient(135deg, rgba(255,184,0,0.08), rgba(255,184,0,0.03))',
@@ -679,7 +762,7 @@ export default function Subscription() {
               {/* ─── Trial Info Banner ─── */}
               {subscription.is_trial && subscription.is_active && (
                 <div
-                  className="mb-6 rounded-[14px] p-4"
+                  className="mb-4 rounded-[14px] p-4"
                   style={{
                     background:
                       'linear-gradient(135deg, rgba(var(--color-accent-400), 0.08), rgba(var(--color-accent-400), 0.03))',
@@ -757,46 +840,67 @@ export default function Subscription() {
                 </div>
               )}
 
-              {/* ─── Traffic Progress ─── */}
-              <div className="mb-6">
-                <div className="mb-2.5 flex items-center justify-between">
-                  <span className="text-[11px] font-medium uppercase tracking-wider text-dark-50/40">
-                    {t('subscription.traffic')}
-                  </span>
-                  <div className="flex items-center gap-2">
-                    <span className="font-mono text-[11px] text-dark-50/30">
-                      {isUnlimited
-                        ? formatTraffic(usedGb)
-                        : `${formatTraffic(usedGb)} / ${formatTraffic(subscription.traffic_limit_gb)}`}
+              {/* ─── Traffic ─── */}
+              <div className="mb-4">
+                {isUnlimited ? (
+                  /* Unlimited — just a badge, no progress bar */
+                  <div className="flex items-center justify-between">
+                    <span className="text-[11px] font-medium uppercase tracking-wider text-dark-50/40">
+                      {t('subscription.traffic')}
                     </span>
-                    <button
-                      onClick={() => refreshTrafficMutation.mutate()}
-                      disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
-                      className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium text-dark-50/30 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-50"
+                    <span
+                      className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-xs font-semibold"
+                      style={{
+                        background: `rgba(${zone.mainVarRaw}, 0.12)`,
+                        border: `1px solid rgba(${zone.mainVarRaw}, 0.25)`,
+                        color: zone.mainHex,
+                      }}
                     >
-                      <RefreshIcon
-                        className="h-3 w-3"
-                        spinning={refreshTrafficMutation.isPending}
-                      />
-                      {trafficRefreshCooldown > 0
-                        ? `${trafficRefreshCooldown}s`
-                        : t('common.refresh')}
-                    </button>
+                      <span className="text-base leading-none">∞</span>
+                      {t('subscription.unlimitedTraffic', 'Безлимит по трафику')}
+                    </span>
                   </div>
-                </div>
-                {subscription.traffic_reset_mode &&
-                  subscription.traffic_reset_mode !== 'NO_RESET' && (
-                    <div className="mb-2 text-[10px] text-dark-50/25">
-                      {t(`subscription.trafficReset.${subscription.traffic_reset_mode}`)}
+                ) : (
+                  /* Limited — usage text + small progress bar */
+                  <>
+                    <div className="mb-2.5 flex items-center justify-between">
+                      <span className="text-[11px] font-medium uppercase tracking-wider text-dark-50/40">
+                        {t('subscription.traffic')}
+                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="font-mono text-[11px] text-dark-50/30">
+                          {`${formatTraffic(usedGb)} / ${formatTraffic(subscription.traffic_limit_gb)}`}
+                        </span>
+                        <button
+                          onClick={() => refreshTrafficMutation.mutate()}
+                          disabled={refreshTrafficMutation.isPending || trafficRefreshCooldown > 0}
+                          className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-medium text-dark-50/30 transition-colors hover:bg-dark-50/[0.05] hover:text-dark-50/50 disabled:cursor-not-allowed disabled:opacity-50"
+                        >
+                          <RefreshIcon
+                            className="h-3 w-3"
+                            spinning={refreshTrafficMutation.isPending}
+                          />
+                          {trafficRefreshCooldown > 0
+                            ? `${trafficRefreshCooldown}s`
+                            : t('common.refresh')}
+                        </button>
+                      </div>
                     </div>
-                  )}
-                <TrafficProgressBar
-                  usedGb={usedGb}
-                  limitGb={subscription.traffic_limit_gb}
-                  percent={usedPercent}
-                  isUnlimited={isUnlimited}
-                  compact
-                />
+                    {subscription.traffic_reset_mode &&
+                      subscription.traffic_reset_mode !== 'NO_RESET' && (
+                        <div className="mb-2 text-[10px] text-dark-50/25">
+                          {t(`subscription.trafficReset.${subscription.traffic_reset_mode}`)}
+                        </div>
+                      )}
+                    <TrafficProgressBar
+                      usedGb={usedGb}
+                      limitGb={subscription.traffic_limit_gb}
+                      percent={usedPercent}
+                      isUnlimited={false}
+                      compact
+                    />
+                  </>
+                )}
               </div>
 
               {/* ─── Connect Device Button ─── */}
@@ -812,7 +916,7 @@ export default function Subscription() {
                     }
                     navigate(subscriptionId ? `/connection?sub=${subscriptionId}` : '/connection');
                   }}
-                  className={`mb-5 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
+                  className={`mb-4 flex w-full items-center gap-3.5 rounded-[14px] p-3.5 text-left transition-shadow duration-300${isAtDeviceLimit ? 'cursor-not-allowed opacity-50' : ''}`}
                   style={{ fontFamily: 'inherit' }}
                 >
                   <div
@@ -890,7 +994,7 @@ export default function Subscription() {
 
               {/* ─── Subscription URL ─── */}
               {displayedConnectionUrl && !shouldHideConnectionLink && (
-                <div className="mb-5 flex gap-2">
+                <div className="mb-4 flex gap-2">
                   <code
                     className="block min-w-0 flex-1 truncate whitespace-nowrap rounded-[10px] px-3 py-2 font-mono text-[11px] text-dark-50/30"
                     style={{
@@ -919,18 +1023,67 @@ export default function Subscription() {
                 </div>
               )}
 
-              {/* ─── Countdown ─── */}
-              <div className="mb-5">
-                <CountdownTimer
-                  endDate={subscription.end_date}
-                  isActive={subscription.is_active || subscription.is_limited}
-                  glassColors={g}
-                />
+              {/* ─── Term + Auto-renewal (two cards in one row) ─── */}
+              <div className="mb-4 grid grid-cols-2 gap-3">
+                <div className={showAutopay ? 'min-w-0' : 'col-span-2'}>
+                  <CountdownTimer
+                    endDate={subscription.end_date}
+                    isActive={subscription.is_active || subscription.is_limited}
+                    glassColors={g}
+                  />
+                </div>
+                {showAutopay && (
+                  <div
+                    className="flex items-center justify-between rounded-[14px] p-3.5"
+                    style={{
+                      background: g.innerBg,
+                      border: `1px solid ${g.innerBorder}`,
+                    }}
+                  >
+                    <div className="min-w-0 pr-2">
+                      <div className="text-sm font-semibold text-dark-50">
+                        {t('subscription.autoRenewal')}
+                      </div>
+                      <div className="mt-0.5 text-[11px] text-dark-50/30">
+                        {t('subscription.daysBeforeExpiry', {
+                          count: subscription.autopay_days_before,
+                        })}
+                      </div>
+                      <div className="mt-1 text-[11px] leading-snug text-dark-50/40">
+                        {t(
+                          'subscription.autoRenewalBalanceHint',
+                          'Спишется автоматически с баланса личного кабинета',
+                        )}
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => autopayMutation.mutate(!subscription.autopay_enabled)}
+                      disabled={autopayMutation.isPending}
+                      role="switch"
+                      aria-checked={subscription.autopay_enabled}
+                      aria-label={t('subscription.autopay', 'Auto-payment')}
+                      className="relative h-7 w-[52px] shrink-0 rounded-full transition-colors duration-300"
+                      style={{
+                        background: subscription.autopay_enabled ? zone.mainHex : g.textGhost,
+                      }}
+                    >
+                      <span
+                        className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-transform duration-300"
+                        style={{
+                          transform: subscription.autopay_enabled
+                            ? 'translateX(23px)'
+                            : 'translateX(0)',
+                          boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                        }}
+                      />
+                    </button>
+                  </div>
+                )}
               </div>
 
               {/* ─── Locations ─── */}
               {subscription.servers && subscription.servers.length > 0 && (
-                <div className="mb-5">
+                <div className="mb-4">
                   <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-dark-50/35">
                     {t('subscription.locationsLabel')}
                   </div>
@@ -958,7 +1111,7 @@ export default function Subscription() {
 
               {/* ─── Purchased Traffic Packages ─── */}
               {subscription.traffic_purchases && subscription.traffic_purchases.length > 0 && (
-                <div className="mb-5">
+                <div className="mb-4">
                   <div className="mb-2 text-[10px] font-medium uppercase tracking-wider text-dark-50/35">
                     {t('subscription.purchasedTraffic')}
                   </div>
@@ -1023,52 +1176,6 @@ export default function Subscription() {
                       </div>
                     ))}
                   </div>
-                </div>
-              )}
-
-              {/* ─── Autopay Toggle ─── */}
-              {!subscription.is_trial && !subscription.is_daily && (
-                <div
-                  className="flex items-center justify-between rounded-[14px] p-3.5"
-                  style={{
-                    background: g.innerBg,
-                    border: `1px solid ${g.innerBorder}`,
-                  }}
-                >
-                  <div>
-                    <div className="text-sm font-semibold text-dark-50">
-                      {t('subscription.autoRenewal')}
-                    </div>
-                    <div className="mt-0.5 text-[11px] text-dark-50/30">
-                      {t('subscription.daysBeforeExpiry', {
-                        count: subscription.autopay_days_before,
-                      })}
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => autopayMutation.mutate(!subscription.autopay_enabled)}
-                    disabled={autopayMutation.isPending}
-                    role="switch"
-                    aria-checked={subscription.autopay_enabled}
-                    aria-label={t('subscription.autopay', 'Auto-payment')}
-                    className="relative h-7 w-[52px] rounded-full transition-colors duration-300"
-                    style={{
-                      background: subscription.autopay_enabled ? zone.mainHex : g.textGhost,
-                    }}
-                  >
-                    {/* translateX (compositor) instead of left (layout-thrash).
-                        Resting position pinned at left:3px; on toggles a 23px
-                        slide on the GPU. */}
-                    <span
-                      className="absolute left-[3px] top-[3px] h-[22px] w-[22px] rounded-full bg-white transition-transform duration-300"
-                      style={{
-                        transform: subscription.autopay_enabled
-                          ? 'translateX(23px)'
-                          : 'translateX(0)',
-                        boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
-                      }}
-                    />
-                  </button>
                 </div>
               )}
             </div>
@@ -1263,9 +1370,6 @@ export default function Subscription() {
         </div>
       )}
 
-      {/* Purchase / Renewal CTA */}
-      <PurchaseCTAButton subscription={subscription} isMultiTariff={isMultiTariff} />
-
       {/* Delete expired subscription */}
       {isMultiTariff &&
         subscription &&
@@ -1284,87 +1388,6 @@ export default function Subscription() {
                 navigate('/subscriptions', { replace: true });
               }}
             />
-          </div>
-        )}
-
-      {/* Additional Options (Buy Devices) */}
-      {subscription &&
-        (subscription.is_active || subscription.is_limited) &&
-        !subscription.is_trial &&
-        subscription.device_limit !== 0 && (
-          <div
-            className="relative overflow-hidden rounded-3xl"
-            style={{
-              background: g.cardBg,
-              border: `1px solid ${g.cardBorder}`,
-              boxShadow: g.shadow,
-              padding: '24px 28px',
-            }}
-          >
-            <h2 className="mb-4 text-base font-bold tracking-tight text-dark-50">
-              {t('subscription.additionalOptions.title')}
-            </h2>
-
-            {/* Buy Devices */}
-            <DeviceTopupSheet
-              open={showDeviceTopup}
-              onOpen={() => setShowDeviceTopup(true)}
-              onClose={() => setShowDeviceTopup(false)}
-              subscription={subscription}
-              subscriptionId={subscriptionId}
-              devicesToAdd={devicesToAdd}
-              onDevicesToAddChange={setDevicesToAdd}
-              purchaseOptions={purchaseOptions}
-              isDark={isDark}
-            />
-
-            {/* Reduce Devices */}
-            <div className="mt-4">
-              <DeviceReductionSheet
-                open={showDeviceReduction}
-                onOpen={() => setShowDeviceReduction(true)}
-                onClose={() => setShowDeviceReduction(false)}
-                subscriptionPresent={!!subscription}
-                subscriptionId={subscriptionId}
-                targetDeviceLimit={targetDeviceLimit}
-                onTargetDeviceLimitChange={setTargetDeviceLimit}
-                isDark={isDark}
-              />
-            </div>
-
-            {/* Buy Traffic */}
-            {subscription.traffic_limit_gb > 0 && (
-              <div className="mt-4">
-                <TrafficTopupSheet
-                  open={showTrafficTopup}
-                  onOpen={() => setShowTrafficTopup(true)}
-                  onClose={() => setShowTrafficTopup(false)}
-                  subscription={subscription}
-                  subscriptionId={subscriptionId}
-                  selectedTrafficPackage={selectedTrafficPackage}
-                  onSelectedTrafficPackageChange={setSelectedTrafficPackage}
-                  purchaseOptions={purchaseOptions}
-                  isDark={isDark}
-                />
-              </div>
-            )}
-
-            {/* Server Management - only in classic mode */}
-            {!isTariffsMode && (
-              <div className="mt-4">
-                <ServerManagementSheet
-                  open={showServerManagement}
-                  onOpen={() => setShowServerManagement(true)}
-                  onClose={() => setShowServerManagement(false)}
-                  subscription={subscription}
-                  subscriptionId={subscriptionId}
-                  selectedServers={selectedServersToUpdate}
-                  onSelectedServersChange={setSelectedServersToUpdate}
-                  purchaseOptions={purchaseOptions}
-                  isDark={isDark}
-                />
-              </div>
-            )}
           </div>
         )}
 

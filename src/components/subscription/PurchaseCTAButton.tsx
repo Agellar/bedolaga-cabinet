@@ -1,7 +1,7 @@
 import { Link } from 'react-router';
 import { useTranslation } from 'react-i18next';
 import { HoverBorderGradient } from '../ui/hover-border-gradient';
-import { ChevronRightIcon, SubscriptionIcon } from '@/components/icons';
+import { SubscriptionIcon } from '@/components/icons';
 import type { Subscription } from '../../types';
 
 interface PurchaseCTAButtonProps {
@@ -57,36 +57,21 @@ export default function PurchaseCTAButton({
         duration={4}
         className="group relative w-full cursor-pointer overflow-hidden rounded-2xl"
       >
+        {/* Solid, centered fill — deliberately distinct from the translucent
+            glass buttons around it so the primary action stands out. */}
         <div
-          className="relative flex items-center justify-between rounded-[14px] px-5 py-4 transition-colors duration-300"
+          className="relative flex flex-col items-center justify-center rounded-[14px] px-5 py-3.5 text-center transition-colors duration-300"
           style={{
             background: isExpired
-              ? 'linear-gradient(135deg, rgba(255,59,92,0.08), rgba(255,107,53,0.06))'
-              : 'linear-gradient(135deg, rgba(var(--color-accent-400), 0.08), rgba(var(--color-accent-400), 0.06))',
+              ? 'linear-gradient(135deg, rgb(var(--color-critical-500)), #ff6b35)'
+              : 'linear-gradient(135deg, rgb(var(--color-accent-500)), rgb(var(--color-accent-600)))',
           }}
         >
-          {/* Left: icon + text */}
-          <div className="flex items-center gap-3">
-            {/* Sparkle icon */}
-            <div
-              className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl"
-              style={{
-                background: isExpired
-                  ? 'rgba(255,59,92,0.12)'
-                  : 'rgba(var(--color-accent-400), 0.12)',
-                color: accentColor,
-              }}
-            >
-              <SubscriptionIcon className="h-[18px] w-[18px]" />
-            </div>
-            <div>
-              <div className="text-[15px] font-semibold text-dark-50">{buttonText}</div>
-              <div className="text-[12px] text-dark-50/40">{hintText}</div>
-            </div>
+          <div className="flex items-center gap-2">
+            <SubscriptionIcon className="h-5 w-5 text-white" />
+            <span className="text-[17px] font-bold tracking-tight text-white">{buttonText}</span>
           </div>
-
-          {/* Right: chevron */}
-          <ChevronRightIcon className="h-5 w-5 flex-shrink-0 text-dark-50/30 transition-transform duration-300 group-hover:translate-x-1" />
+          <span className="mt-0.5 text-[11px] text-white/70">{hintText}</span>
         </div>
       </HoverBorderGradient>
     </Link>
