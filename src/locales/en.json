@@ -316,6 +316,8 @@
     "subscriptions": "Subscriptions"
   },
   "subscription": {
+    "connectionLink": "Device connection link",
+    "linkCopied": "Link copied",
     "title": "Subscription",
     "currentPlan": "Current Plan",
     "status": "Status",

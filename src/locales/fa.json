@@ -297,6 +297,8 @@
     "validUntil": "معتبر تا {{date}}"
   },
   "subscription": {
+    "connectionLink": "لینک اتصال دستگاه‌ها",
+    "linkCopied": "لینک کپی شد",
     "title": "اشتراک",
     "currentPlan": "پلن فعلی",
     "status": "وضعیت",

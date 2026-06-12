@@ -329,6 +329,8 @@
     "subscriptions": "Подписки"
   },
   "subscription": {
+    "connectionLink": "Ссылка для подключения устройств",
+    "linkCopied": "Ссылка скопирована",
     "title": "Подписка",
     "currentPlan": "Текущий тариф",
     "status": "Статус",

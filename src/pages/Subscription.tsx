@@ -24,6 +24,7 @@ import {
   LinkIcon,
 } from '../components/icons';
 import { useHaptic } from '../platform';
+import { useToast } from '../components/Toast';
 import { resolveConnectionUrlForUi } from '../utils/connectionLink';
 import { getErrorMessage, getInsufficientBalanceError } from '../utils/subscriptionHelpers';
 import { DeviceTopupSheet } from '../components/subscription/sheets/DeviceTopupSheet';
@@ -44,6 +45,7 @@ export default function Subscription() {
   const { isDark } = useTheme();
   const g = getGlassColors(isDark);
   const haptic = useHaptic();
+  const { showToast } = useToast();
   const [copied, setCopied] = useState(false);
   const [showDeleteSheet, setShowDeleteSheet] = useState(false);
   const [showQr, setShowQr] = useState(false);
@@ -306,6 +308,8 @@ export default function Subscription() {
       void copyToClipboard(displayedConnectionUrl);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
+      haptic.notification('success');
+      showToast({ type: 'success', message: t('subscription.linkCopied', 'Ссылка скопирована') });
     }
   };
 
@@ -377,7 +381,7 @@ export default function Subscription() {
                   <LinkIcon className="h-4 w-4" />
                 </div>
                 <h2 className="text-base font-bold tracking-tight text-dark-50">
-                  {t('subscription.connectionLink', 'Ссылка для подключения')}
+                  {t('subscription.connectionLink', 'Ссылка для подключения устройств')}
                 </h2>
               </div>
               <div className="flex gap-2">
