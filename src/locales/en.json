@@ -43,6 +43,7 @@
   "nav": {
     "dashboard": "Dashboard",
     "subscription": "Subscription",
+    "devices": "Devices",
     "balance": "Balance",
     "referral": "Referrals",
     "support": "Support",

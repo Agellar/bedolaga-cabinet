@@ -43,6 +43,7 @@
   "nav": {
     "dashboard": "Главная",
     "subscription": "Подписка",
+    "devices": "Устройства",
     "balance": "Баланс",
     "referral": "Рефералы",
     "support": "Поддержка",

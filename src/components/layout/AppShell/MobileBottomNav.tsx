@@ -41,7 +41,7 @@ export function MobileBottomNav({
   // When only one of them is enabled, that one fills the slot.
   const coreItems = [
     { path: '/', label: t('nav.dashboard'), icon: HomeIcon },
-    { path: '/subscriptions', label: t('nav.subscription'), icon: SubscriptionIcon },
+    { path: '/subscriptions', label: t('nav.devices'), icon: SubscriptionIcon },
     { path: '/balance', label: t('nav.balance'), icon: WalletIcon },
     ...(wheelEnabled
       ? [{ path: '/wheel', label: t('nav.wheel'), icon: WheelIcon }]

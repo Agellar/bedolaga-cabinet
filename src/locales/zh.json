@@ -43,6 +43,7 @@
   "nav": {
     "dashboard": "首页",
     "subscription": "订阅",
+    "devices": "设备",
     "balance": "余额",
     "referral": "推荐",
     "support": "支持",
