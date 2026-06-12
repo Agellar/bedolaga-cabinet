@@ -283,7 +283,7 @@ export default function SubscriptionCardActive({
           <div className="mb-1.5 text-[10px] font-semibold uppercase tracking-wider text-dark-50/55">
             {t('dashboard.tariff')}
           </div>
-          <div className="text-base font-bold leading-tight tracking-tight text-dark-50">
+          <div className="min-w-0 truncate text-base font-bold leading-tight tracking-tight text-dark-50">
             {subscription.tariff_name || t('subscription.currentPlan')}
           </div>
           <div className="mt-1 font-mono text-[11px] text-dark-50/55">
