@@ -20,6 +20,7 @@ import {
   isFullscreen,
 } from '@telegram-apps/sdk-react';
 import { clearStaleSessionIfNeeded } from './utils/token';
+import { installEncodingSurrogateGuard } from './utils/installEncodingSurrogateGuard';
 import { useAuthStore } from './store/auth';
 import { AppWithNavigator } from './AppWithNavigator';
 import { ErrorBoundary } from './components/ErrorBoundary';
@@ -29,6 +30,12 @@ import { getCachedFullscreenEnabled, isTelegramMobile } from './hooks/useTelegra
 import { applyTelegramLanguage } from './i18n';
 import './styles/globals.css';
 import './styles/aurora.css';
+
+// Harden the global encoders against lone UTF-16 surrogates (truncated emoji in
+// backend names/remarks) BEFORE anything renders or fetches — otherwise such a
+// string crashes any encodeURI/encodeURIComponent/btoa path on iOS WebKit,
+// including qrcode.react's internal encodeURI. See installEncodingSurrogateGuard.
+installEncodingSurrogateGuard();
 
 // Polyfill Object.hasOwn for older iOS/Android WebViews (Safari < 15.4, old Chrome).
 // @telegram-apps/sdk v3 depends on valibot which uses Object.hasOwn internally.
