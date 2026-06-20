@@ -7,7 +7,17 @@ export const getErrorMessage = (error: unknown): string => {
   if (error instanceof AxiosError) {
     const detail = error.response?.data?.detail;
     if (typeof detail === 'string') return detail;
-    if (typeof detail === 'object' && detail?.message) return detail.message;
+    // FastAPI 422 validation errors arrive as an array of
+    // `{ type, loc, msg, ... }` objects. Never return the raw array/object —
+    // React throws "error #31" if one reaches JSX as a child. Pull the first
+    // human-readable `msg` instead.
+    if (Array.isArray(detail)) {
+      const msg = detail.find((item) => item && typeof item.msg === 'string')?.msg;
+      if (msg) return msg;
+    }
+    if (detail && typeof detail === 'object' && typeof detail.message === 'string') {
+      return detail.message;
+    }
   }
   if (error instanceof Error) return error.message;
   return i18n.t('common.error');

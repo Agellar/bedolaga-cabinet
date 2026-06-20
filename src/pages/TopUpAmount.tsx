@@ -12,6 +12,7 @@ import { useHaptic, usePlatform } from '@/platform';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import type { PaymentMethod, PaymentMethodOption } from '../types';
 import { saveTopUpPendingInfo } from '../utils/topUpStorage';
+import { getErrorMessage } from '../utils/subscriptionHelpers';
 import { getSafeRedirectPath } from '../utils/safeRedirect';
 import { openPaymentUrl } from '../utils/openPaymentUrl';
 import { copyToClipboard } from '@/utils/clipboard';
@@ -198,8 +199,7 @@ export default function TopUpAmount() {
     },
     onError: (err: unknown) => {
       haptic.notification('error');
-      const axiosError = err as { response?: { data?: { detail?: string }; status?: number } };
-      setError(axiosError?.response?.data?.detail || t('balance.errors.invoiceFailed'));
+      setError(getErrorMessage(err) || t('balance.errors.invoiceFailed'));
     },
   });
 
@@ -267,11 +267,8 @@ export default function TopUpAmount() {
       }
     },
     onError: (err: unknown) => {
-      const detail =
-        (err as { response?: { data?: { detail?: string } } })?.response?.data?.detail || '';
-      setError(
-        detail.includes('not yet implemented') ? t('balance.useBot') : detail || t('common.error'),
-      );
+      const message = getErrorMessage(err);
+      setError(message.includes('not yet implemented') ? t('balance.useBot') : message);
     },
   });
 
