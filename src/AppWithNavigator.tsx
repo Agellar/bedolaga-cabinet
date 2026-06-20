@@ -177,6 +177,23 @@ function TelegramBackButton() {
 const ADMIN_TICKET_START_PARAM_RE = /^admin_ticket_(\d+)$/;
 
 /**
+ * Simple `startapp` params → in-app route. Used by deep links that reopen the
+ * Mini App on a specific tab — e.g. a payment provider's "back to shop" return
+ * URL (`t.me/<bot>/<app>?startapp=balance`) should land the user on the Balance
+ * tab, not the dashboard. Keep keys lowercase and alias-free of leading slashes.
+ */
+const START_PARAM_ROUTES: Record<string, string> = {
+  balance: '/balance',
+  subscription: '/subscriptions',
+  subscriptions: '/subscriptions',
+  devices: '/subscriptions',
+  referral: '/referral',
+  support: '/support',
+  dashboard: '/',
+  home: '/',
+};
+
+/**
  * Routes a Telegram Mini App start param to an in-app destination on launch.
  *
  * Admin ticket notification buttons in GROUP/channel chats open the cabinet via
@@ -205,6 +222,12 @@ function StartParamNavigator() {
     const match = ADMIN_TICKET_START_PARAM_RE.exec(startParam);
     if (match) {
       navigate(`/admin/tickets/${match[1]}`, { replace: true });
+      return;
+    }
+
+    const route = START_PARAM_ROUTES[startParam.toLowerCase()];
+    if (route) {
+      navigate(route, { replace: true });
     }
   }, [navigate]);
 
