@@ -161,7 +161,7 @@ export function AppHeader({
 
   const navItems = [
     { path: '/', label: t('nav.dashboard'), icon: HomeIcon },
-    { path: '/subscriptions', label: t('nav.subscription'), icon: SubscriptionIcon },
+    { path: '/subscriptions', label: t('nav.devices'), icon: SubscriptionIcon },
     { path: '/balance', label: t('nav.balance'), icon: WalletIcon },
     ...(referralEnabled ? [{ path: '/referral', label: t('nav.referral'), icon: UsersIcon }] : []),
     { path: '/support', label: t('nav.support'), icon: ChatIcon },
@@ -192,7 +192,7 @@ export function AppHeader({
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className={cn('flex min-w-0 items-center gap-2', !appName && 'mr-4')}
+              className="flex flex-shrink-0 items-center"
             >
               <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-800/80 shadow-md">
                 <span
@@ -215,9 +215,6 @@ export function AppHeader({
                   />
                 )}
               </div>
-              {appName && (
-                <span className="truncate text-sm font-semibold text-dark-100">{appName}</span>
-              )}
             </Link>
 
             {/* Right side */}

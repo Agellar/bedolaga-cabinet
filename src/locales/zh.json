@@ -263,7 +263,8 @@
       "traffic": "流量",
       "devices": "设备",
       "expiredDate": "过期时间",
-      "activeUntil": "已过期 — 至 {{date}}"
+      "activeUntil": "已过期 — 至 {{date}}",
+      "expiredDate_trial": "已过期"
     },
     "deviceLimitReached": "断开设备以添加新设备",
     "suspended": {
@@ -280,7 +281,9 @@
     "remaining": "剩余",
     "stats": {
       "balance": "余额",
-      "referrals": "推荐人"
+      "referrals": "推荐人",
+      "earnings": "收益",
+      "subscription": "订阅"
     },
     "tariff": "套餐",
     "trafficUsageTitle": "流量使用",
@@ -293,7 +296,18 @@
     "unlimited": "无限",
     "usageLast14Days": "近 14 天使用情况",
     "usedSuffix": "已用",
-    "validUntil": "有效期至 {{date}}"
+    "validUntil": "有效期至 {{date}}",
+    "daysRemaining": "剩余天数",
+    "devicesConnected": "已连接 {{count}}",
+    "devicesShort": "台",
+    "trafficUsage": "{{used}} / {{limit}} GB",
+    "usedTraffic": "已用 {{amount}}",
+    "zone": {
+      "critical": "严重",
+      "danger": "偏高",
+      "normal": "正常",
+      "warning": "适中"
+    }
   },
   "subscription": {
     "connectionLink": "设备连接链接",
@@ -388,7 +402,8 @@
       "unavailable": "试用不可用",
       "insufficientBalance": "余额不足以激活试用",
       "payAndActivate": "付费并激活",
-      "topUpToActivate": "充值以激活试用"
+      "topUpToActivate": "充值以激活试用",
+      "titlePaid": "试用订阅"
     },
     "connection": {
       "title": "连接VPN",
@@ -418,7 +433,8 @@
       "qrTitle": "订阅二维码",
       "qrScanHint": "使用相机扫描以连接",
       "qrButton": "二维码",
-      "openQr": "打开二维码"
+      "openQr": "打开二维码",
+      "instructions": "说明"
     },
     "additionalOptions": {
       "title": "附加选项",
@@ -450,7 +466,8 @@
       "reduceDevicesDescription": "调整您的设备限制。如有需要，请先断开多余设备的连接",
       "reduceDevicesTitle": "减少设备数量",
       "reduceUnavailable": "当前无法减少设备数量",
-      "reducing": "正在减少…"
+      "reducing": "正在减少…",
+      "alreadyAtMinDeviceLimit": "已达到您套餐的最低设备限制"
     },
     "serverManagement": {
       "statusLegend": "✅ — 已连接 • ➕ — 将添加（付费）• ➖ — 将断开",
@@ -487,7 +504,10 @@
       "remainingDays": "剩余天数",
       "switch": "切换",
       "title": "切换套餐",
-      "upgradeCost": "升级费用"
+      "upgradeCost": "升级费用",
+      "notEnoughBalance": "余额不足",
+      "preview": "预览",
+      "switched": "套餐已更改"
     },
     "promoGroup": {
       "yourGroup": "您的组：{{name}}",
@@ -547,7 +567,10 @@
       "pausedInfo": "订阅已暂停",
       "resumeBtn": "恢复",
       "title": "暂停订阅",
-      "willBeCharged": "将扣费"
+      "willBeCharged": "将扣费",
+      "dailyOnly": "仅日付套餐可暂停",
+      "pausedMessage": "订阅已暂停",
+      "resumedMessage": "订阅已恢复"
     },
     "tvQuickConnect": {
       "title": "连接电视",
@@ -597,11 +620,30 @@
     "trialInfo": {
       "description": "免费试用我们的服务 {{days}} 天",
       "remaining": "剩余 {{count}} 天",
-      "title": "试用期"
+      "title": "试用期",
+      "upgradeNow": "选择套餐"
     },
     "trialUpgrade": {
       "description": "升级到付费订阅以解锁所有功能并继续使用",
       "title": "升级订阅"
+    },
+    "allDevicesDeleted": "所有设备已删除",
+    "connectedAt": "已连接",
+    "deviceDeleted": "设备已删除",
+    "insufficientBalance": "余额不足。还差 {{missing}} ₽",
+    "model": "型号",
+    "platform": "平台",
+    "switchTraffic": {
+      "currentPackage": "当前套餐包",
+      "newPackage": "新套餐包",
+      "switch": "更改",
+      "switched": "流量已更改",
+      "title": "更改流量"
+    },
+    "trialBanner": {
+      "description": "您的试用还剩 {{days}} 天。订阅以继续使用服务。",
+      "title": "试用期已激活",
+      "upgrade": "选择套餐"
     }
   },
   "balance": {
@@ -644,6 +686,48 @@
       },
       "apple_iap": {
         "description": "通过Apple应用内购买支付"
+      },
+      "aurapay": {
+        "description": "通过 AuraPay 支付"
+      },
+      "cloudpayments": {
+        "description": "通过 CloudPayments 使用银行卡支付"
+      },
+      "freekassa": {
+        "description": "通过 FreeKassa 支付"
+      },
+      "freekassa_card": {
+        "description": "使用俄罗斯银行卡支付"
+      },
+      "freekassa_sbp": {
+        "description": "通过 SBP（二维码）支付"
+      },
+      "heleket": {
+        "description": "通过 Heleket 使用加密货币支付"
+      },
+      "kassa_ai": {
+        "description": "通过 Kassa AI 支付"
+      },
+      "mulenpay": {
+        "description": "通过 MulenPay 支付"
+      },
+      "pal24": {
+        "description": "通过 PAL24 支付"
+      },
+      "paypear": {
+        "description": "通过 PayPear 支付"
+      },
+      "platega": {
+        "description": "通过 Platega 支付"
+      },
+      "riopay": {
+        "description": "通过 RioPay 支付"
+      },
+      "rollypay": {
+        "description": "通过 RollyPay（SBP）支付"
+      },
+      "wata": {
+        "description": "通过 Wata 支付"
       }
     },
     "transactionHistory": "交易记录",
@@ -746,7 +830,9 @@
       "goToBalance": "查看余额",
       "tryAgain": "重试"
     },
-    "top_up": "充值"
+    "top_up": "充值",
+    "paymentOption": "支付方式",
+    "selectPaymentOption": "选择支付方式"
   },
   "referral": {
     "title": "推荐计划",
@@ -932,7 +1018,9 @@
     "ticketsDisabled": "工单已禁用",
     "useExternalLink": "请使用外部链接获取支持",
     "create_ticket": "创建工单",
-    "writeButton": "发消息"
+    "writeButton": "发消息",
+    "goToProfile": "前往个人资料",
+    "useProfile": "请前往机器人个人资料以获取支持"
   },
   "wheel": {
     "title": "幸运转盘",
@@ -4149,7 +4237,8 @@
       "subtitle": "各套餐统计",
       "tariffName": "套餐名称",
       "title": "套餐统计",
-      "trialSubscriptions": "试用订阅"
+      "trialSubscriptions": "试用订阅",
+      "noTariffs": "无套餐"
     }
   },
   "profile": {
@@ -4515,7 +4604,14 @@
       "online": "在线",
       "offline": "离线",
       "users": "用户",
-      "noNodes": "未找到节点"
+      "noNodes": "未找到节点",
+      "address": "地址",
+      "lastSeen": "最后活动",
+      "name": "名称",
+      "onlineCount": "在线",
+      "title": "节点",
+      "total": "总计",
+      "usersCount": "用户"
     },
     "agents": {
       "status": "状态",
@@ -4531,7 +4627,26 @@
       "healthy": "健康",
       "warning": "警告",
       "critical": "严重",
-      "noAgents": "未找到代理"
+      "noAgents": "未找到代理",
+      "batches": "批次",
+      "dedup": "去重",
+      "failures": "失败",
+      "filter": "过滤",
+      "lastReport": "最后报告",
+      "nodeName": "节点",
+      "reconnects": "重连次数",
+      "summary": {
+        "avgQueueSize": "平均队列大小",
+        "criticalCount": "严重",
+        "healthyCount": "正常",
+        "onlineAgents": "在线",
+        "title": "概览",
+        "totalAgents": "代理总数",
+        "totalDropped": "已丢弃",
+        "totalSent": "已发送",
+        "warningCount": "警告"
+      },
+      "title": "代理"
     },
     "users": {
       "status": "状态",
@@ -4543,7 +4658,19 @@
       "networkType": "网络类型",
       "bans": "封禁",
       "searchPlaceholder": "按邮箱搜索...",
-      "viewDetails": "查看详情"
+      "viewDetails": "查看详情",
+      "filter": {
+        "all": "全部",
+        "normal": "正常",
+        "overLimit": "超出限制"
+      },
+      "lastSeen": "最后活动",
+      "noLimit": "无限制",
+      "noUsers": "未找到用户",
+      "normal": "正常",
+      "requests": "请求数",
+      "title": "用户",
+      "uniqueIps": "唯一 IP 数"
     },
     "punishments": {
       "user": "用户",
@@ -4553,7 +4680,19 @@
       "ipCount": "IP",
       "limit": "限制",
       "unban": "解封",
-      "noBans": "无活跃封禁"
+      "noBans": "无活跃封禁",
+      "actions": "操作",
+      "history": "封禁历史",
+      "noHistory": "未找到历史记录",
+      "noPunishments": "无活跃封禁",
+      "node": "节点",
+      "punishedAt": "封禁时间",
+      "searchHistory": "搜索历史...",
+      "title": "活跃封禁",
+      "unbanConfirm": "解封用户 {{username}}？",
+      "unbanError": "解封失败",
+      "unbanSuccess": "用户已解封",
+      "username": "用户"
     },
     "violations": {
       "type": "类型",
@@ -4563,7 +4702,14 @@
       "active": "活跃",
       "resolved": "已解决",
       "detectedAt": "发现时间",
-      "noViolations": "未发现违规"
+      "noViolations": "未发现违规",
+      "bytesLimit": "限制",
+      "bytesUsed": "已使用",
+      "email": "邮箱",
+      "no": "否",
+      "title": "流量违规",
+      "username": "用户",
+      "yes": "是"
     },
     "reports": {
       "period": "期间",
@@ -4571,7 +4717,8 @@
       "currentIps": "唯一IP",
       "count": "违规数",
       "topViolators": "违规排行",
-      "username": "用户"
+      "username": "用户",
+      "title": "周期报告"
     },
     "traffic": {
       "enabled": "流量监控",
@@ -4582,10 +4729,17 @@
       "bytesLimit": "限制",
       "topUsers": "流量排行",
       "username": "用户",
-      "recentViolations": "最近违规"
+      "recentViolations": "最近违规",
+      "title": "流量统计"
     },
     "health": {
-      "systemStatus": "系统状态"
+      "systemStatus": "系统状态",
+      "components": "组件",
+      "degraded": "性能下降",
+      "healthy": "正常",
+      "title": "系统状态",
+      "unhealthy": "异常",
+      "uptime": "运行时间"
     },
     "userDetail": {
       "title": "用户详情",
@@ -4593,7 +4747,102 @@
       "country": "国家",
       "node": "节点",
       "requests": "请求数",
-      "ipHistory": "IP历史"
+      "ipHistory": "IP历史",
+      "action": "操作",
+      "ban": "封禁",
+      "city": "城市",
+      "close": "关闭",
+      "destination": "目标",
+      "email": "邮箱",
+      "firstSeen": "首次连接",
+      "lastSeen": "最后连接",
+      "limit": "设备限制",
+      "networkType": "网络类型",
+      "noIps": "无 IP 数据",
+      "noRequests": "无请求数据",
+      "port": "端口",
+      "protocol": "协议",
+      "recentRequests": "最近请求",
+      "requestCount": "请求数",
+      "sourceIp": "源 IP",
+      "status": "状态",
+      "timestamp": "时间",
+      "totalRequests": "总请求数",
+      "uniqueIps": "唯一 IP 数"
+    },
+    "banModal": {
+      "ban": "封禁",
+      "cancel": "取消",
+      "duration": "时长（分钟）",
+      "durationPlaceholder": "输入时长（分钟）",
+      "error": "封禁失败",
+      "reason": "原因",
+      "reasonPlaceholder": "输入封禁原因（可选）",
+      "success": "用户已封禁",
+      "title": "封禁用户",
+      "username": "用户名",
+      "usernamePlaceholder": "输入用户名"
+    },
+    "dashboard": {
+      "activePunishments": "活跃封禁",
+      "activeUsers": "活跃用户",
+      "agentsOnline": "在线代理",
+      "nodesOnline": "在线节点",
+      "panelConnected": "面板已连接",
+      "panelDisconnected": "面板已断开",
+      "totalPunishments": "总惩罚数",
+      "totalRequests": "总请求数",
+      "totalUsers": "用户总数",
+      "uptime": "运行时间",
+      "usersOverLimit": "超出限制"
+    },
+    "settings": {
+      "categories": {
+        "general": "常规设置",
+        "network": "网络检测",
+        "notifications": "通知",
+        "progressive_bans": "渐进式封禁",
+        "punishment": "惩罚",
+        "rate_limit": "请求限制",
+        "traffic": "流量监控"
+      },
+      "daily_report_enabled": "每日报告",
+      "daily_report_hour": "报告发送时间",
+      "error": "保存出错",
+      "general": "常规",
+      "heartbeat_timeout": "心跳超时（秒）",
+      "ip_window_seconds": "IP 统计窗口（秒）",
+      "limits": "限制",
+      "network_block_mobile": "封锁移动网络",
+      "network_block_mobile_minutes": "移动网络封锁（分钟）",
+      "network_block_wifi": "封锁 WiFi",
+      "network_block_wifi_minutes": "WiFi 封锁（分钟）",
+      "network_detection_collect_all": "从所有节点收集",
+      "network_detection_enabled": "网络类型检测",
+      "network_detection_monitor_all": "监控所有节点",
+      "network_detection_nodes": "检测节点",
+      "network_notify_mobile": "移动网络通知",
+      "network_notify_wifi": "WiFi 通知",
+      "notifications": "通知",
+      "notify_on_node_status": "节点状态通知",
+      "notify_on_punishment": "封禁通知",
+      "progressive_ban_1": "第 1 次封禁（分钟）",
+      "progressive_ban_2": "第 2 次封禁（分钟）",
+      "progressive_ban_3": "第 3 次封禁（分钟）",
+      "progressive_ban_window_hours": "重置窗口（小时）",
+      "progressive_bans_enabled": "渐进式封禁",
+      "punishment_enabled": "启用自动封禁",
+      "punishment_minutes": "封禁时长（分钟）",
+      "rate_limit_max": "最大请求数",
+      "rate_limit_window": "限制窗口（秒）",
+      "saved": "设置已保存",
+      "title": "系统设置",
+      "traffic_ban_minutes": "流量封禁（分钟）",
+      "traffic_check_interval": "检查间隔（分钟）",
+      "traffic_limit_gb": "流量限制（GB）",
+      "traffic_monitor_enabled": "流量监控",
+      "traffic_window_minutes": "检查窗口（分钟）",
+      "whitelist": "白名单"
     }
   },
   "merge": {
@@ -4832,7 +5081,17 @@
     "tabActivate": "激活",
     "tabBuy": "购买",
     "tabMyGifts": "我的礼物",
-    "unlimitedTraffic": "无限流量"
+    "unlimitedTraffic": "无限流量",
+    "activating": "激活中...",
+    "codeCopied": "代码已复制！",
+    "copyCode": "复制",
+    "sentGiftsTitle": "已发送",
+    "sharePreview": "分享消息",
+    "statusDelivered": "已送达",
+    "statusExpired": "已过期",
+    "statusFailed": "失败",
+    "statusPending": "等待中",
+    "statusPendingActivation": "等待激活"
   },
   "news": {
     "title": "新闻与更新",
@@ -4891,6 +5150,17 @@
         "image": "图片",
         "imageUrlPrompt": "图片URL：",
         "linkUrlPrompt": "URL："
+      },
+      "combobox": {
+        "clear": "清除",
+        "create": "创建",
+        "createNew": "新建",
+        "delete": "删除 {{name}}",
+        "noItems": "未找到内容",
+        "placeholder": "选择...",
+        "searchOrCreate": "搜索或创建...",
+        "selectCategory": "选择分类",
+        "selectTag": "选择标签"
       }
     }
   },
@@ -4901,5 +5171,14 @@
     "empty": "您还没有订阅",
     "emptyDesc": "选择套餐以开始使用",
     "title": "我的订阅"
+  },
+  "resetPassword": {
+    "enterNewPassword": "请在下方输入新密码。",
+    "invalidToken": "链接无效",
+    "redirectingToLogin": "正在跳转到登录页面...",
+    "setPassword": "设置密码",
+    "success": "密码已修改！",
+    "title": "新密码",
+    "tokenExpiredOrInvalid": "密码重置链接无效或已过期。"
   }
 }

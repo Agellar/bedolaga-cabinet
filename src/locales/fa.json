@@ -263,7 +263,8 @@
       "traffic": "ترافیک",
       "devices": "دستگاه‌ها",
       "expiredDate": "منقضی شده",
-      "activeUntil": "منقضی شده — تا {{date}}"
+      "activeUntil": "منقضی شده — تا {{date}}",
+      "expiredDate_trial": "منقضی‌شده"
     },
     "deviceLimitReached": "برای افزودن دستگاه جدید، دستگاه‌های فعلی را قطع کنید",
     "suspended": {
@@ -280,7 +281,9 @@
     "remaining": "باقی‌مانده",
     "stats": {
       "balance": "موجودی",
-      "referrals": "معرفی‌شده‌ها"
+      "referrals": "معرفی‌شده‌ها",
+      "earnings": "درآمد",
+      "subscription": "اشتراک"
     },
     "tariff": "تعرفه",
     "trafficUsageTitle": "مصرف ترافیک",
@@ -293,7 +296,18 @@
     "unlimited": "نامحدود",
     "usageLast14Days": "مصرف ۱۴ روز اخیر",
     "usedSuffix": "مصرف شده",
-    "validUntil": "معتبر تا {{date}}"
+    "validUntil": "معتبر تا {{date}}",
+    "daysRemaining": "روزهای باقی‌مانده",
+    "devicesConnected": "{{count}} متصل",
+    "devicesShort": "دستگاه",
+    "trafficUsage": "{{used}} / {{limit}} گیگابایت",
+    "usedTraffic": "{{amount}} استفاده‌شده",
+    "zone": {
+      "critical": "بحرانی",
+      "danger": "بالا",
+      "normal": "عادی",
+      "warning": "متوسط"
+    }
   },
   "subscription": {
     "connectionLink": "لینک اتصال دستگاه‌ها",
@@ -388,7 +402,8 @@
       "unavailable": "دوره آزمایشی در دسترس نیست",
       "insufficientBalance": "موجودی برای فعال‌سازی دوره آزمایشی کافی نیست",
       "payAndActivate": "پرداخت و فعال‌سازی",
-      "topUpToActivate": "برای فعال‌سازی دوره آزمایشی موجودی را افزایش دهید"
+      "topUpToActivate": "برای فعال‌سازی دوره آزمایشی موجودی را افزایش دهید",
+      "titlePaid": "اشتراک آزمایشی"
     },
     "connection": {
       "title": "اتصال VPN",
@@ -418,7 +433,8 @@
       "qrTitle": "کد QR اشتراک",
       "qrScanHint": "برای اتصال با دوربین اسکن کنید",
       "qrButton": "کد QR",
-      "openQr": "باز کردن کد QR"
+      "openQr": "باز کردن کد QR",
+      "instructions": "راهنما"
     },
     "additionalOptions": {
       "title": "گزینه‌های اضافی",
@@ -450,7 +466,8 @@
       "reduceDevicesDescription": "محدودیت دستگاه‌های خود را تنظیم کنید. در صورت لزوم ابتدا دستگاه‌های اضافه را قطع کنید",
       "reduceDevicesTitle": "کاهش تعداد دستگاه‌ها",
       "reduceUnavailable": "در حال حاضر کاهش تعداد دستگاه‌ها امکان‌پذیر نیست",
-      "reducing": "در حال کاهش…"
+      "reducing": "در حال کاهش…",
+      "alreadyAtMinDeviceLimit": "در حال حاضر در حداقل محدودیت دستگاه تعرفه شما هستید"
     },
     "serverManagement": {
       "statusLegend": "✅ — متصل • ➕ — اضافه خواهد شد (پولی) • ➖ — قطع خواهد شد",
@@ -487,7 +504,10 @@
       "remainingDays": "روزهای باقی‌مانده",
       "switch": "تغییر",
       "title": "تغییر تعرفه",
-      "upgradeCost": "هزینه ارتقا"
+      "upgradeCost": "هزینه ارتقا",
+      "notEnoughBalance": "موجودی کافی نیست",
+      "preview": "پیش‌نمایش",
+      "switched": "تعرفه تغییر کرد"
     },
     "promoGroup": {
       "yourGroup": "گروه شما: {{name}}",
@@ -547,7 +567,10 @@
       "pausedInfo": "اشتراک متوقف شده",
       "resumeBtn": "ادامه",
       "title": "توقف اشتراک",
-      "willBeCharged": "کسر خواهد شد"
+      "willBeCharged": "کسر خواهد شد",
+      "dailyOnly": "توقف فقط برای تعرفه‌های روزانه در دسترس است",
+      "pausedMessage": "اشتراک متوقف شد",
+      "resumedMessage": "اشتراک از سر گرفته شد"
     },
     "tvQuickConnect": {
       "title": "اتصال تلویزیون",
@@ -597,11 +620,30 @@
     "trialInfo": {
       "description": "{{days}} روز سرویس ما را رایگان امتحان کنید",
       "remaining": "{{count}} روز باقی‌مانده",
-      "title": "دوره آزمایشی"
+      "title": "دوره آزمایشی",
+      "upgradeNow": "انتخاب تعرفه"
     },
     "trialUpgrade": {
       "description": "برای دسترسی به همه امکانات و ادامه استفاده به اشتراک پرداختی ارتقا دهید",
       "title": "ارتقای اشتراک"
+    },
+    "allDevicesDeleted": "همه دستگاه‌ها حذف شدند",
+    "connectedAt": "متصل‌شده",
+    "deviceDeleted": "دستگاه حذف شد",
+    "insufficientBalance": "موجودی کافی نیست. کمبود {{missing}} ₽",
+    "model": "مدل",
+    "platform": "پلتفرم",
+    "switchTraffic": {
+      "currentPackage": "بسته فعلی",
+      "newPackage": "بسته جدید",
+      "switch": "تغییر",
+      "switched": "ترافیک تغییر کرد",
+      "title": "تغییر ترافیک"
+    },
+    "trialBanner": {
+      "description": "{{days}} روز از دوره آزمایشی شما باقی مانده است. برای ادامه استفاده از سرویس اشتراک تهیه کنید.",
+      "title": "دوره آزمایشی فعال است",
+      "upgrade": "انتخاب تعرفه"
     }
   },
   "balance": {
@@ -644,6 +686,48 @@
       },
       "apple_iap": {
         "description": "پرداخت از طریق Apple In-App Purchase"
+      },
+      "aurapay": {
+        "description": "پرداخت از طریق AuraPay"
+      },
+      "cloudpayments": {
+        "description": "پرداخت با کارت بانکی از طریق CloudPayments"
+      },
+      "freekassa": {
+        "description": "پرداخت از طریق FreeKassa"
+      },
+      "freekassa_card": {
+        "description": "پرداخت با کارت بانکی روسیه"
+      },
+      "freekassa_sbp": {
+        "description": "پرداخت از طریق SBP (کد QR)"
+      },
+      "heleket": {
+        "description": "پرداخت با ارز دیجیتال از طریق Heleket"
+      },
+      "kassa_ai": {
+        "description": "پرداخت از طریق Kassa AI"
+      },
+      "mulenpay": {
+        "description": "پرداخت از طریق MulenPay"
+      },
+      "pal24": {
+        "description": "پرداخت از طریق PAL24"
+      },
+      "paypear": {
+        "description": "پرداخت از طریق PayPear"
+      },
+      "platega": {
+        "description": "پرداخت از طریق Platega"
+      },
+      "riopay": {
+        "description": "پرداخت از طریق RioPay"
+      },
+      "rollypay": {
+        "description": "پرداخت از طریق RollyPay (SBP)"
+      },
+      "wata": {
+        "description": "پرداخت از طریق Wata"
       }
     },
     "transactionHistory": "تاریخچه تراکنش‌ها",
@@ -746,7 +830,9 @@
       "goToBalance": "مشاهده موجودی",
       "tryAgain": "تلاش مجدد"
     },
-    "top_up": "افزایش موجودی"
+    "top_up": "افزایش موجودی",
+    "paymentOption": "روش پرداخت",
+    "selectPaymentOption": "روش پرداخت را انتخاب کنید"
   },
   "referral": {
     "title": "برنامه معرفی",
@@ -932,7 +1018,9 @@
     "ticketsDisabled": "تیکت‌ها غیرفعال است",
     "useExternalLink": "لطفاً از لینک خارجی برای دریافت پشتیبانی استفاده کنید",
     "create_ticket": "ایجاد تیکت",
-    "writeButton": "پیام"
+    "writeButton": "پیام",
+    "goToProfile": "رفتن به پروفایل",
+    "useProfile": "برای دریافت پشتیبانی به پروفایل ربات بروید"
   },
   "wheel": {
     "title": "چرخ شانس",
@@ -4150,7 +4238,8 @@
       "subtitle": "آمار به تفکیک تعرفه",
       "tariffName": "نام تعرفه",
       "title": "آمار تعرفه‌ها",
-      "trialSubscriptions": "اشتراک‌های آزمایشی"
+      "trialSubscriptions": "اشتراک‌های آزمایشی",
+      "noTariffs": "بدون تعرفه"
     }
   },
   "profile": {
@@ -4474,7 +4563,14 @@
       "online": "آنلاین",
       "offline": "آفلاین",
       "users": "کاربران",
-      "noNodes": "گره‌ای یافت نشد"
+      "noNodes": "گره‌ای یافت نشد",
+      "address": "آدرس",
+      "lastSeen": "آخرین فعالیت",
+      "name": "نام",
+      "onlineCount": "آنلاین",
+      "title": "نودها",
+      "total": "کل",
+      "usersCount": "کاربران"
     },
     "agents": {
       "status": "وضعیت",
@@ -4490,7 +4586,26 @@
       "healthy": "سالم",
       "warning": "هشدار",
       "critical": "بحرانی",
-      "noAgents": "عاملی یافت نشد"
+      "noAgents": "عاملی یافت نشد",
+      "batches": "دسته‌ها",
+      "dedup": "حذف تکرار",
+      "failures": "خطاها",
+      "filter": "فیلتر کردن",
+      "lastReport": "آخرین گزارش",
+      "nodeName": "نود",
+      "reconnects": "اتصال مجدد",
+      "summary": {
+        "avgQueueSize": "میانگین اندازه صف",
+        "criticalCount": "بحرانی",
+        "healthyCount": "سالم",
+        "onlineAgents": "آنلاین",
+        "title": "خلاصه",
+        "totalAgents": "کل عامل‌ها",
+        "totalDropped": "حذف‌شده",
+        "totalSent": "ارسال‌شده",
+        "warningCount": "هشدار"
+      },
+      "title": "عامل‌ها"
     },
     "users": {
       "status": "وضعیت",
@@ -4502,7 +4617,19 @@
       "networkType": "نوع شبکه",
       "bans": "مسدودسازی",
       "searchPlaceholder": "جستجو بر اساس ایمیل...",
-      "viewDetails": "مشاهده جزئیات"
+      "viewDetails": "مشاهده جزئیات",
+      "filter": {
+        "all": "همه",
+        "normal": "عادی",
+        "overLimit": "فراتر از حد"
+      },
+      "lastSeen": "آخرین فعالیت",
+      "noLimit": "بدون محدودیت",
+      "noUsers": "کاربری یافت نشد",
+      "normal": "عادی",
+      "requests": "درخواست‌ها",
+      "title": "کاربران",
+      "uniqueIps": "IPهای یکتا"
     },
     "punishments": {
       "user": "کاربر",
@@ -4512,7 +4639,19 @@
       "ipCount": "IP",
       "limit": "محدودیت",
       "unban": "رفع مسدودسازی",
-      "noBans": "مسدودسازی فعالی نیست"
+      "noBans": "مسدودسازی فعالی نیست",
+      "actions": "اقدامات",
+      "history": "تاریخچه مسدودی",
+      "noHistory": "تاریخچه‌ای یافت نشد",
+      "noPunishments": "مسدودی فعالی نیست",
+      "node": "نود",
+      "punishedAt": "زمان مسدودی",
+      "searchHistory": "جستجوی تاریخچه...",
+      "title": "مسدودی‌های فعال",
+      "unbanConfirm": "رفع مسدودی کاربر {{username}}؟",
+      "unbanError": "رفع مسدودی ناموفق",
+      "unbanSuccess": "مسدودی کاربر رفع شد",
+      "username": "کاربر"
     },
     "violations": {
       "type": "نوع",
@@ -4522,7 +4661,14 @@
       "active": "فعال",
       "resolved": "حل شده",
       "detectedAt": "زمان شناسایی",
-      "noViolations": "تخلفی یافت نشد"
+      "noViolations": "تخلفی یافت نشد",
+      "bytesLimit": "محدودیت",
+      "bytesUsed": "استفاده‌شده",
+      "email": "ایمیل",
+      "no": "خیر",
+      "title": "تخلفات ترافیک",
+      "username": "کاربر",
+      "yes": "بله"
     },
     "reports": {
       "period": "دوره",
@@ -4530,7 +4676,8 @@
       "currentIps": "IP یکتا",
       "count": "تخلفات",
       "topViolators": "بیشترین تخلفات",
-      "username": "کاربر"
+      "username": "کاربر",
+      "title": "گزارش‌های دوره‌ای"
     },
     "traffic": {
       "enabled": "نظارت ترافیک",
@@ -4541,10 +4688,17 @@
       "bytesLimit": "محدودیت",
       "topUsers": "بیشترین ترافیک",
       "username": "کاربر",
-      "recentViolations": "تخلفات اخیر"
+      "recentViolations": "تخلفات اخیر",
+      "title": "آمار ترافیک"
     },
     "health": {
-      "systemStatus": "وضعیت سیستم"
+      "systemStatus": "وضعیت سیستم",
+      "components": "اجزا",
+      "degraded": "کاهش‌یافته",
+      "healthy": "سالم",
+      "title": "وضعیت سیستم",
+      "unhealthy": "ناسالم",
+      "uptime": "زمان کارکرد"
     },
     "userDetail": {
       "title": "جزئیات کاربر",
@@ -4552,7 +4706,102 @@
       "country": "کشور",
       "node": "گره",
       "requests": "درخواست‌ها",
-      "ipHistory": "تاریخچه IP"
+      "ipHistory": "تاریخچه IP",
+      "action": "اقدام",
+      "ban": "مسدود کردن",
+      "city": "شهر",
+      "close": "بستن",
+      "destination": "مقصد",
+      "email": "ایمیل",
+      "firstSeen": "اولین اتصال",
+      "lastSeen": "آخرین اتصال",
+      "limit": "محدودیت دستگاه",
+      "networkType": "نوع شبکه",
+      "noIps": "داده IP موجود نیست",
+      "noRequests": "داده درخواست موجود نیست",
+      "port": "پورت",
+      "protocol": "پروتکل",
+      "recentRequests": "درخواست‌های اخیر",
+      "requestCount": "درخواست‌ها",
+      "sourceIp": "IP مبدأ",
+      "status": "وضعیت",
+      "timestamp": "زمان",
+      "totalRequests": "کل درخواست‌ها",
+      "uniqueIps": "IPهای یکتا"
+    },
+    "banModal": {
+      "ban": "مسدود کردن",
+      "cancel": "لغو",
+      "duration": "مدت (دقیقه)",
+      "durationPlaceholder": "مدت را به دقیقه وارد کنید",
+      "error": "مسدودسازی ناموفق",
+      "reason": "دلیل",
+      "reasonPlaceholder": "دلیل مسدودسازی را وارد کنید (اختیاری)",
+      "success": "کاربر مسدود شد",
+      "title": "مسدود کردن کاربر",
+      "username": "نام کاربری",
+      "usernamePlaceholder": "نام کاربری را وارد کنید"
+    },
+    "dashboard": {
+      "activePunishments": "مسدودی‌های فعال",
+      "activeUsers": "کاربران فعال",
+      "agentsOnline": "عامل‌های آنلاین",
+      "nodesOnline": "نودهای آنلاین",
+      "panelConnected": "پنل متصل است",
+      "panelDisconnected": "پنل قطع است",
+      "totalPunishments": "کل مجازات‌ها",
+      "totalRequests": "کل درخواست‌ها",
+      "totalUsers": "کل کاربران",
+      "uptime": "زمان کارکرد",
+      "usersOverLimit": "فراتر از حد"
+    },
+    "settings": {
+      "categories": {
+        "general": "تنظیمات عمومی",
+        "network": "تشخیص شبکه",
+        "notifications": "اعلان‌ها",
+        "progressive_bans": "مسدودی تدریجی",
+        "punishment": "مجازات‌ها",
+        "rate_limit": "محدودیت درخواست",
+        "traffic": "نظارت بر ترافیک"
+      },
+      "daily_report_enabled": "گزارش روزانه",
+      "daily_report_hour": "ساعت گزارش",
+      "error": "خطا در ذخیره",
+      "general": "عمومی",
+      "heartbeat_timeout": "تایم‌اوت heartbeat (ثانیه)",
+      "ip_window_seconds": "بازه شمارش IP (ثانیه)",
+      "limits": "محدودیت‌ها",
+      "network_block_mobile": "مسدودسازی موبایل",
+      "network_block_mobile_minutes": "مسدودی موبایل (دقیقه)",
+      "network_block_wifi": "مسدودسازی WiFi",
+      "network_block_wifi_minutes": "مسدودی WiFi (دقیقه)",
+      "network_detection_collect_all": "جمع‌آوری از همه نودها",
+      "network_detection_enabled": "تشخیص نوع شبکه",
+      "network_detection_monitor_all": "نظارت بر همه نودها",
+      "network_detection_nodes": "نودهای تشخیص",
+      "network_notify_mobile": "اعلان موبایل",
+      "network_notify_wifi": "اعلان WiFi",
+      "notifications": "اعلان‌ها",
+      "notify_on_node_status": "اعلان وضعیت نود",
+      "notify_on_punishment": "اعلان مسدودی",
+      "progressive_ban_1": "مسدودی اول (دقیقه)",
+      "progressive_ban_2": "مسدودی دوم (دقیقه)",
+      "progressive_ban_3": "مسدودی سوم (دقیقه)",
+      "progressive_ban_window_hours": "بازه بازنشانی (ساعت)",
+      "progressive_bans_enabled": "مسدودی تدریجی",
+      "punishment_enabled": "فعال‌سازی مسدودی خودکار",
+      "punishment_minutes": "مدت مسدودی (دقیقه)",
+      "rate_limit_max": "حداکثر درخواست",
+      "rate_limit_window": "بازه محدودیت (ثانیه)",
+      "saved": "تنظیمات ذخیره شد",
+      "title": "تنظیمات سیستم",
+      "traffic_ban_minutes": "مسدودی ترافیک (دقیقه)",
+      "traffic_check_interval": "بازه بررسی (دقیقه)",
+      "traffic_limit_gb": "محدودیت ترافیک (گیگابایت)",
+      "traffic_monitor_enabled": "نظارت بر ترافیک",
+      "traffic_window_minutes": "بازه بررسی (دقیقه)",
+      "whitelist": "لیست سفید"
     }
   },
   "blocking": {
@@ -4833,7 +5082,17 @@
     "tabActivate": "فعال‌سازی",
     "tabBuy": "خرید",
     "tabMyGifts": "هدایای من",
-    "unlimitedTraffic": "ترافیک نامحدود"
+    "unlimitedTraffic": "ترافیک نامحدود",
+    "activating": "در حال فعال‌سازی...",
+    "codeCopied": "کد کپی شد!",
+    "copyCode": "کپی",
+    "sentGiftsTitle": "ارسال‌شده",
+    "sharePreview": "پیام برای اشتراک‌گذاری",
+    "statusDelivered": "تحویل‌شده",
+    "statusExpired": "منقضی‌شده",
+    "statusFailed": "ناموفق",
+    "statusPending": "در انتظار",
+    "statusPendingActivation": "در انتظار فعال‌سازی"
   },
   "news": {
     "title": "اخبار و به‌روزرسانی‌ها",
@@ -4892,6 +5151,17 @@
         "image": "تصویر",
         "imageUrlPrompt": "آدرس تصویر:",
         "linkUrlPrompt": "آدرس پیوند:"
+      },
+      "combobox": {
+        "clear": "پاک کردن",
+        "create": "ایجاد",
+        "createNew": "ایجاد جدید",
+        "delete": "حذف {{name}}",
+        "noItems": "چیزی یافت نشد",
+        "placeholder": "انتخاب کنید...",
+        "searchOrCreate": "جستجو یا ایجاد...",
+        "selectCategory": "انتخاب دسته",
+        "selectTag": "انتخاب برچسب"
       }
     }
   },
@@ -4902,5 +5172,14 @@
     "empty": "هنوز اشتراکی ندارید",
     "emptyDesc": "برای شروع تعرفه‌ای انتخاب کنید",
     "title": "اشتراک‌های من"
+  },
+  "resetPassword": {
+    "enterNewPassword": "رمز عبور جدید را در زیر وارد کنید.",
+    "invalidToken": "پیوند نامعتبر",
+    "redirectingToLogin": "در حال انتقال به صفحه ورود...",
+    "setPassword": "تنظیم رمز عبور",
+    "success": "رمز عبور تغییر کرد!",
+    "title": "رمز عبور جدید",
+    "tokenExpiredOrInvalid": "پیوند بازنشانی رمز عبور نامعتبر یا منقضی شده است."
   }
 }

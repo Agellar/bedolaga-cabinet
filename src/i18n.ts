@@ -27,6 +27,19 @@ async function loadLanguage(lng: string): Promise<void> {
   loadedLanguages.add(lng);
 }
 
+/**
+ * Load a language bundle and only then switch to it. Locale bundles are lazy
+ * (dynamic import), so calling i18n.changeLanguage() directly flips the active
+ * language before its strings exist — the UI renders one frame in the fallback
+ * (or half-translated) and never re-renders once the bundle arrives. Awaiting
+ * the load first guarantees the switch paints fully translated.
+ */
+export async function switchLanguage(lng: string): Promise<void> {
+  const code = lng.split('-')[0];
+  await loadLanguage(code);
+  await i18n.changeLanguage(code);
+}
+
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)

@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { useState, useRef, useEffect } from 'react';
 import { infoApi, type LanguageInfo } from '@/api/info';
 import { ChevronDownIcon } from '@/components/icons';
+import { switchLanguage } from '@/i18n';
 
 export default function LanguageSwitcher() {
   const { i18n } = useTranslation();
@@ -35,9 +36,10 @@ export default function LanguageSwitcher() {
   }, []);
 
   const changeLanguage = (code: string) => {
-    // i18n.ts subscribes to languageChanged and syncs <html lang> + dir
-    // centrally — no need to set documentElement.dir here.
-    i18n.changeLanguage(code);
+    // switchLanguage awaits the lazy locale bundle before flipping the active
+    // language, so the UI repaints fully translated instead of one frame in the
+    // fallback. i18n.ts subscribes to languageChanged and syncs <html lang> + dir.
+    void switchLanguage(code);
     setIsOpen(false);
   };
 

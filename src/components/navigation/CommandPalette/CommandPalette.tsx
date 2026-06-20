@@ -78,7 +78,7 @@ export function CommandPalette({
   // Navigation items
   const navigationItems = [
     { label: t('nav.dashboard'), icon: HomeIcon, path: '/' },
-    { label: t('nav.subscription'), icon: SubscriptionIcon, path: '/subscriptions' },
+    { label: t('nav.devices'), icon: SubscriptionIcon, path: '/subscriptions' },
     { label: t('nav.balance'), icon: WalletIcon, path: '/balance' },
     ...(referralEnabled ? [{ label: t('nav.referral'), icon: UsersIcon, path: '/referral' }] : []),
     { label: t('nav.support'), icon: ChatIcon, path: '/support' },
