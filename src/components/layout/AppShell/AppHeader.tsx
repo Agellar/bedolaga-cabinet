@@ -192,7 +192,7 @@ export function AppHeader({
             <Link
               to="/"
               onClick={() => setMobileMenuOpen(false)}
-              className={cn('flex flex-shrink-0 items-center gap-2.5', !appName && 'mr-4')}
+              className={cn('flex min-w-0 items-center gap-2', !appName && 'mr-4')}
             >
               <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-800/80 shadow-md">
                 <span
@@ -216,14 +216,12 @@ export function AppHeader({
                 )}
               </div>
               {appName && (
-                <span className="whitespace-nowrap text-base font-semibold text-dark-100">
-                  {appName}
-                </span>
+                <span className="truncate text-sm font-semibold text-dark-100">{appName}</span>
               )}
             </Link>
 
             {/* Right side */}
-            <div className="flex items-center gap-1.5">
+            <div className="flex flex-shrink-0 items-center gap-1.5">
               {/* Command palette trigger (web only) */}
               {platform !== 'telegram' && (
                 <button
@@ -284,7 +282,7 @@ export function AppHeader({
                   haptic.impact('light');
                   setMobileMenuOpen(!mobileMenuOpen);
                 }}
-                className="hover-border-gradient flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold text-dark-100"
+                className="hover-border-gradient flex items-center gap-1 rounded-xl px-3 py-2 text-sm font-semibold text-dark-100"
                 aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
                 aria-expanded={mobileMenuOpen}
               >

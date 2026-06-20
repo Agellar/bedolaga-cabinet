@@ -11,7 +11,6 @@ import { useCloseOnSuccessNotification } from '../store/successNotification';
 import { useHaptic, usePlatform } from '@/platform';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
 import type { PaymentMethod, PaymentMethodOption } from '../types';
-import BentoCard from '../components/ui/BentoCard';
 import { saveTopUpPendingInfo } from '../utils/topUpStorage';
 import { getSafeRedirectPath } from '../utils/safeRedirect';
 import { openPaymentUrl } from '../utils/openPaymentUrl';
@@ -375,16 +374,6 @@ export default function TopUpAmount() {
     }
   };
 
-  const quickAmounts = (
-    method.quick_amounts != null
-      ? method.quick_amounts.map((kopeks) => kopeks / 100)
-      : [100, 300, 500, 1000]
-  ).filter((a) => a >= minRubles && a <= maxRubles);
-  const currencyDecimals = targetCurrency === 'IRR' || targetCurrency === 'RUB' ? 0 : 2;
-  const getQuickValue = (rub: number) =>
-    targetCurrency === 'IRR'
-      ? Math.round(convertAmount(rub)).toString()
-      : convertAmount(rub).toFixed(currencyDecimals);
   const isPending = topUpMutation.isPending || starsPaymentMutation.isPending;
 
   const handleOpenPayment = () => {
@@ -521,44 +510,6 @@ export default function TopUpAmount() {
           </button>
         </div>
       </motion.div>
-
-      {/* Quick amount buttons */}
-      {quickAmounts.length > 0 && (
-        <motion.div variants={staggerItem} className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-          {quickAmounts.map((a) => {
-            const val = getQuickValue(a);
-            const isSelected = amount === val;
-            return (
-              <BentoCard
-                key={a}
-                as="button"
-                type="button"
-                onClick={() => {
-                  setAmount(val);
-                  setQuickRub(a);
-                  inputRef.current?.blur();
-                }}
-                hover
-                glow={isSelected}
-                className={`flex flex-col items-center justify-center px-2 py-3 ${
-                  isSelected ? 'border-accent-500/50 bg-accent-500/10' : ''
-                }`}
-              >
-                <span
-                  className={`text-base font-bold ${isSelected ? 'text-accent-400' : 'text-dark-200'}`}
-                >
-                  {formatAmount(a, 0)}
-                </span>
-                <span
-                  className={`mt-0.5 text-xs ${isSelected ? 'text-accent-400/70' : 'text-dark-500'}`}
-                >
-                  {currencySymbol}
-                </span>
-              </BentoCard>
-            );
-          })}
-        </motion.div>
-      )}
 
       {/* Error message */}
       {error && (
