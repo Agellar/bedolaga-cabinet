@@ -786,7 +786,8 @@
       "rateLimit": "لطفاً {{seconds}} ثانیه صبر کنید",
       "selectMethod": "روش را انتخاب کنید",
       "enterAmount": "مبلغ را وارد کنید",
-      "amountRange": "مبلغ: {{min}} – {{max}} ₽"
+      "amountRange": "مبلغ: {{min}} – {{max}} ₽",
+      "minAmount": "حداقل مبلغ شارژ {{min}} روبل است"
     },
     "insufficientFunds": "موجودی ناکافی",
     "missing": "کمبود",

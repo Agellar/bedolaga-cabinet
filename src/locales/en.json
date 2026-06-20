@@ -842,7 +842,8 @@
       "rateLimit": "Please wait {{seconds}} sec.",
       "selectMethod": "Select a method",
       "enterAmount": "Enter an amount",
-      "amountRange": "Amount: {{min}} – {{max}} ₽"
+      "amountRange": "Amount: {{min}} – {{max}} ₽",
+      "minAmount": "Minimum top-up amount is {{min}} RUB"
     },
     "paymentSuccess": {
       "title": "Payment Successful",

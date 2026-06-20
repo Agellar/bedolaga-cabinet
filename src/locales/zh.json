@@ -786,7 +786,8 @@
       "rateLimit": "请等待 {{seconds}} 秒",
       "selectMethod": "请选择支付方式",
       "enterAmount": "请输入金额",
-      "amountRange": "金额：{{min}} – {{max}} ₽"
+      "amountRange": "金额：{{min}} – {{max}} ₽",
+      "minAmount": "最低充值金额为 {{min}} 卢布"
     },
     "insufficientFunds": "余额不足",
     "missing": "缺少",

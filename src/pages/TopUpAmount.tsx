@@ -353,7 +353,11 @@ export default function TopUpAmount() {
       }
     }
 
-    if (canonicalRubles < minRubles || canonicalRubles > maxRubles) {
+    if (canonicalRubles < minRubles) {
+      setError(t('balance.errors.minAmount', { min: minRubles }));
+      return;
+    }
+    if (canonicalRubles > maxRubles) {
       setError(t('balance.errors.amountRange', { min: minRubles, max: maxRubles }));
       return;
     }
