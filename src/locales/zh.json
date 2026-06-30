@@ -42,7 +42,6 @@
   "nav": {
     "dashboard": "首页",
     "subscription": "订阅",
-    "devices": "设备",
     "balance": "余额",
     "referral": "推荐",
     "support": "支持",
@@ -54,7 +53,8 @@
     "wheel": "幸运转盘",
     "menu": "菜单",
     "gift": "赠送",
-    "navigation": "导航"
+    "navigation": "导航",
+    "devices": "设备"
   },
   "notifications": {
     "ticketNotifications": "工单通知",
@@ -310,8 +310,6 @@
     }
   },
   "subscription": {
-    "connectionLink": "设备连接链接",
-    "linkCopied": "链接已复制",
     "title": "订阅",
     "currentPlan": "当前套餐",
     "status": "状态",
@@ -627,6 +625,8 @@
       "description": "升级到付费订阅以解锁所有功能并继续使用",
       "title": "升级订阅"
     },
+    "connectionLink": "设备连接链接",
+    "linkCopied": "链接已复制",
     "allDevicesDeleted": "所有设备已删除",
     "connectedAt": "已连接",
     "deviceDeleted": "设备已删除",
@@ -2065,7 +2065,9 @@
         "telegramOidcClientSecret": "Client Secret"
       },
       "offlineConv": "离线转化",
-      "apiKey": "API 密钥"
+      "apiKey": "API 密钥",
+      "legalFooter": "法律页脚",
+      "legalFooterDesc": "登录页面底部的要约、隐私政策和定期付款链接"
     },
     "buttons": {
       "color": "按钮颜色",
@@ -5172,6 +5174,11 @@
     "empty": "您还没有订阅",
     "emptyDesc": "选择套餐以开始使用",
     "title": "我的订阅"
+  },
+  "footer": {
+    "offer": "公开要约",
+    "privacy": "隐私政策",
+    "recurrent": "定期付款"
   },
   "resetPassword": {
     "enterNewPassword": "请在下方输入新密码。",

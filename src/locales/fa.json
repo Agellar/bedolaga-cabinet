@@ -42,7 +42,6 @@
   "nav": {
     "dashboard": "داشبورد",
     "subscription": "اشتراک",
-    "devices": "دستگاه‌ها",
     "balance": "موجودی",
     "referral": "معرفی",
     "support": "پشتیبانی",
@@ -54,7 +53,8 @@
     "wheel": "چرخ شانس",
     "menu": "منو",
     "gift": "هدیه",
-    "navigation": "ناوبری"
+    "navigation": "ناوبری",
+    "devices": "دستگاه‌ها"
   },
   "notifications": {
     "ticketNotifications": "اعلان‌های تیکت",
@@ -310,8 +310,6 @@
     }
   },
   "subscription": {
-    "connectionLink": "لینک اتصال دستگاه‌ها",
-    "linkCopied": "لینک کپی شد",
     "title": "اشتراک",
     "currentPlan": "پلن فعلی",
     "status": "وضعیت",
@@ -627,6 +625,8 @@
       "description": "برای دسترسی به همه امکانات و ادامه استفاده به اشتراک پرداختی ارتقا دهید",
       "title": "ارتقای اشتراک"
     },
+    "connectionLink": "لینک اتصال دستگاه‌ها",
+    "linkCopied": "لینک کپی شد",
     "allDevicesDeleted": "همه دستگاه‌ها حذف شدند",
     "connectedAt": "متصل‌شده",
     "deviceDeleted": "دستگاه حذف شد",
@@ -2000,7 +2000,9 @@
         "telegramOidcClientSecret": "Client Secret"
       },
       "offlineConv": "تبدیل‌های آفلاین",
-      "apiKey": "کلید API"
+      "apiKey": "کلید API",
+      "legalFooter": "پاورقی حقوقی",
+      "legalFooterDesc": "پیوند به پیشنهاد، سیاست حریم خصوصی و پرداخت‌های مکرر در پایین صفحه ورود"
     },
     "buttons": {
       "color": "رنگ دکمه",
@@ -5173,6 +5175,11 @@
     "empty": "هنوز اشتراکی ندارید",
     "emptyDesc": "برای شروع تعرفه‌ای انتخاب کنید",
     "title": "اشتراک‌های من"
+  },
+  "footer": {
+    "offer": "پیشنهاد عمومی",
+    "privacy": "سیاست حفظ حریم خصوصی",
+    "recurrent": "پرداخت‌های مکرر"
   },
   "resetPassword": {
     "enterNewPassword": "رمز عبور جدید را در زیر وارد کنید.",
