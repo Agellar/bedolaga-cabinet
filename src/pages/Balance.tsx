@@ -1,3 +1,4 @@
+import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
@@ -325,6 +326,10 @@ export default function Balance() {
         </Card>
       </motion.div>
 
+      {/* Payment methods are not rendered inline here (fork restyle): the hero
+          "Top up" CTA routes to the dedicated /balance/top-up method-select page
+          (TopUpMethodSelect), which lists all available methods incl. cisPay. */}
+
       {/* Transaction History */}
       <motion.div variants={staggerItem}>
         <Card className="glass-card overflow-hidden">
@@ -384,7 +389,7 @@ export default function Balance() {
                                   {getTypeLabel(tx.type)}
                                 </span>
                                 <span className="text-xs text-dark-500">
-                                  {new Date(tx.created_at).toLocaleDateString()}
+                                  {new Date(tx.created_at).toLocaleDateString(uiLocale())}
                                 </span>
                               </div>
                               {tx.description && (
@@ -447,9 +452,10 @@ export default function Balance() {
         </Card>
       </motion.div>
 
-      {/* Saved Cards Navigation */}
+      {/* Saved Cards Navigation — self-animated: mounts after its query resolves,
+          so it animates itself independently of the parent stagger orchestration */}
       {savedCardsData?.recurrent_enabled && (
-        <motion.div variants={staggerItem}>
+        <motion.div variants={staggerItem} initial="initial" animate="animate">
           <Card interactive className="glass-card" onClick={() => navigate('/balance/saved-cards')}>
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">

@@ -173,35 +173,38 @@ function TelegramBackButton() {
   return null;
 }
 
-/** `admin_ticket_<id>` startapp param → /admin/tickets/<id>. */
-const ADMIN_TICKET_START_PARAM_RE = /^admin_ticket_(\d+)$/;
-
-/**
- * Simple `startapp` params → in-app route. Used by deep links that reopen the
- * Mini App on a specific tab — e.g. a payment provider's "back to shop" return
- * URL (`t.me/<bot>/<app>?startapp=balance`) should land the user on the Balance
- * tab, not the dashboard. Keep keys lowercase and alias-free of leading slashes.
- */
-const START_PARAM_ROUTES: Record<string, string> = {
-  balance: '/balance',
-  subscription: '/subscriptions',
-  subscriptions: '/subscriptions',
-  devices: '/subscriptions',
-  referral: '/referral',
-  support: '/support',
-  dashboard: '/',
-  home: '/',
-};
+/** Supported startapp params → in-app destinations. */
+const START_PARAM_ROUTES: Array<{ re: RegExp; to: (match: RegExpExecArray) => string }> = [
+  // Admin ticket notification buttons in group chats (bot issue #2988).
+  { re: /^admin_ticket_(\d+)$/, to: (match) => `/admin/tickets/${match[1]}` },
+  // «Продлить» links for expired subscriptions in the bot's rich main menu.
+  { re: /^renew_(\d+)$/, to: (match) => `/subscriptions/${match[1]}/renew` },
+  // Simple startapp params → their tab (custom fork). Used by deep links that
+  // reopen the Mini App on a specific tab — e.g. a payment provider's "back to
+  // shop" return URL (`?startapp=balance`) should land the user on the Balance
+  // tab, not the dashboard. Matched case-insensitively.
+  { re: /^balance$/i, to: () => '/balance' },
+  { re: /^subscription$/i, to: () => '/subscriptions' },
+  { re: /^subscriptions$/i, to: () => '/subscriptions' },
+  { re: /^devices$/i, to: () => '/subscriptions' },
+  { re: /^referral$/i, to: () => '/referral' },
+  { re: /^support$/i, to: () => '/support' },
+  { re: /^dashboard$/i, to: () => '/' },
+  { re: /^home$/i, to: () => '/' },
+  // Paid-trial «Активировать триал» link in the bot's rich main menu — the
+  // dashboard renders TrialOfferCard with the pay-and-activate flow.
+  { re: /^trial$/, to: () => '/' },
+];
 
 /**
  * Routes a Telegram Mini App start param to an in-app destination on launch.
  *
- * Admin ticket notification buttons in GROUP/channel chats open the cabinet via
- * a `t.me/<bot>/<app>?startapp=admin_ticket_<id>` deep link (bot issue #2988) —
- * `web_app` buttons don't work in group chats, so the startapp param is the only
- * way in. Telegram delivers it as `tgWebAppStartParam`; we map it to the admin
- * ticket route once on mount. Access is still gated by the route's
- * `PermissionRoute permission="tickets:read"`.
+ * Text links and buttons outside private-chat web_app buttons can only enter the
+ * Mini App via `t.me/<bot>/<app>?startapp=<param>` deep links: admin ticket
+ * notifications in GROUP/channel chats (bot issue #2988) and the bot's rich
+ * main-menu «Продлить» links for expired subscriptions. Telegram delivers the
+ * param as `tgWebAppStartParam`; we map it to a route once on mount. Access is
+ * still gated by each route's own guards (e.g. `PermissionRoute`).
  */
 function StartParamNavigator() {
   const navigate = useNavigate();
@@ -219,15 +222,12 @@ function StartParamNavigator() {
     }
     if (!startParam) return;
 
-    const match = ADMIN_TICKET_START_PARAM_RE.exec(startParam);
-    if (match) {
-      navigate(`/admin/tickets/${match[1]}`, { replace: true });
-      return;
-    }
-
-    const route = START_PARAM_ROUTES[startParam.toLowerCase()];
-    if (route) {
-      navigate(route, { replace: true });
+    for (const { re, to } of START_PARAM_ROUTES) {
+      const match = re.exec(startParam);
+      if (match) {
+        navigate(to(match), { replace: true });
+        return;
+      }
     }
   }, [navigate]);
 

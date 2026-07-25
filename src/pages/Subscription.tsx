@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import { uiLocale } from '@/utils/uiLocale';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { Navigate, useNavigate, useParams } from 'react-router';
@@ -938,7 +939,7 @@ export default function Subscription() {
                   </div>
                   <div className="mt-1 text-[12px] text-dark-50/35">
                     {t('subscription.pause.pausedDescription')}{' '}
-                    {new Date(subscription.end_date).toLocaleDateString()} (
+                    {new Date(subscription.end_date).toLocaleDateString(uiLocale())} (
                     {t('subscription.pause.days', { count: subscription.days_left })})
                   </div>
                 </div>
