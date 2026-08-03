@@ -1,13 +1,17 @@
 import { uiLocale } from '@/utils/uiLocale';
 import { useState, useEffect, useRef } from 'react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
 import { useSearchParams, useNavigate } from 'react-router';
 import { motion, AnimatePresence } from 'framer-motion';
 
 import { useAuthStore } from '../store/auth';
 import { balanceApi } from '../api/balance';
+import { subscriptionApi } from '../api/subscription';
 import { useCurrency } from '../hooks/useCurrency';
+import { useHaptic } from '../platform';
+import { useToast } from '../components/Toast';
+import { getErrorMessage } from '../utils/subscriptionHelpers';
 import { API } from '../config/constants';
 import type { PaginatedResponse, Transaction } from '../types';
 
@@ -25,6 +29,8 @@ export default function Balance() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const paymentHandledRef = useRef(false);
+  const haptic = useHaptic();
+  const { showToast } = useToast();
 
   // Fetch balance from API
   const { data: balanceData, refetch: refetchBalance } = useQuery({
@@ -32,6 +38,39 @@ export default function Balance() {
     queryFn: balanceApi.getBalance,
     staleTime: API.BALANCE_STALE_TIME_MS,
     refetchOnMount: 'always',
+  });
+
+  // Autopay-from-balance lives on this page: it decides how the balance is
+  // spent, so it belongs next to the balance rather than on the subscription
+  // screen. Daily tariffs are excluded (they already charge per day) and so
+  // are trials (renewing a trial is a purchase, not a balance charge).
+  const { data: subsList } = useQuery({
+    queryKey: ['subscriptions-list'],
+    queryFn: () => subscriptionApi.getSubscriptions(),
+    staleTime: 60_000,
+  });
+  const autopayTargets = (subsList?.subscriptions ?? []).filter(
+    (s) =>
+      (s.status === 'active' || s.status === 'limited') && !s.is_trial && !s.is_daily,
+  );
+  const showTariffName = autopayTargets.length > 1;
+
+  const autopayMutation = useMutation({
+    mutationFn: ({ id, enabled }: { id: number; enabled: boolean }) =>
+      subscriptionApi.updateAutopay(enabled, undefined, id),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
+      queryClient.invalidateQueries({ queryKey: ['subscription'] });
+      showToast({
+        type: 'success',
+        message: data.autopay_enabled
+          ? t('subscription.autopayBalance.enabled', 'Автопродление с баланса включено')
+          : t('subscription.autopayBalance.disabled', 'Автопродление выключено'),
+      });
+    },
+    onError: (error: unknown) => {
+      showToast({ type: 'error', message: getErrorMessage(error) });
+    },
   });
 
   // Refresh user data on mount to sync balance in store
@@ -236,6 +275,64 @@ export default function Balance() {
           </div>
         </Card>
       </motion.div>
+
+      {/* Autopay from balance — placed right under the balance because it
+          governs how that balance is spent. One row per eligible subscription
+          (the tariff name only appears when there is more than one). */}
+      {autopayTargets.length > 0 && (
+        <motion.div variants={staggerItem}>
+          <Card className="glass-card">
+            <div className="flex flex-col gap-4">
+              {autopayTargets.map((sub, idx) => (
+                <div
+                  key={sub.id}
+                  className={
+                    idx > 0 ? 'flex items-center justify-between gap-4 border-t border-dark-700/40 pt-4' : 'flex items-center justify-between gap-4'
+                  }
+                >
+                  <div className="min-w-0">
+                    <div className="text-sm font-bold tracking-tight text-dark-50">
+                      {t('subscription.autopayBalance.title', 'Автопродление с баланса')}
+                      {showTariffName && sub.tariff_name ? ` · ${sub.tariff_name}` : ''}
+                    </div>
+                    <div className="mt-1 text-[12px] leading-snug text-dark-50/40">
+                      {t(
+                        'subscription.autopayBalance.description',
+                        'Спишем стоимость продления текущего тарифа с вашего баланса перед окончанием подписки — при достаточной сумме.',
+                      )}
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    role="switch"
+                    aria-checked={sub.autopay_enabled}
+                    aria-label={t('subscription.autopayBalance.title', 'Автопродление с баланса')}
+                    disabled={autopayMutation.isPending}
+                    onClick={() => {
+                      haptic.impact('light');
+                      autopayMutation.mutate({ id: sub.id, enabled: !sub.autopay_enabled });
+                    }}
+                    className="relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200 disabled:opacity-60"
+                    style={{
+                      background: sub.autopay_enabled
+                        ? 'rgb(var(--color-accent-500))'
+                        : 'rgba(148,163,184,0.25)',
+                    }}
+                  >
+                    <span
+                      className="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200"
+                      style={{
+                        left: '2px',
+                        transform: sub.autopay_enabled ? 'translateX(20px)' : 'translateX(0)',
+                      }}
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </motion.div>
+      )}
 
       {/* Promo Code Section */}
       <motion.div variants={staggerItem}>
