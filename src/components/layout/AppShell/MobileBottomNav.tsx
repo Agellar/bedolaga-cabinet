@@ -6,19 +6,14 @@ import { cn } from '@/lib/utils';
 import { usePlatform } from '@/platform';
 
 // Icons
-import { HomeIcon, SubscriptionIcon, WalletIcon, UsersIcon, ChatIcon, WheelIcon } from './icons';
+import { HomeIcon, SubscriptionIcon, WalletIcon } from './icons';
+import { UserIcon } from '@/components/icons';
 
 interface MobileBottomNavProps {
   isKeyboardOpen: boolean;
-  referralEnabled?: boolean;
-  wheelEnabled?: boolean;
 }
 
-export function MobileBottomNav({
-  isKeyboardOpen,
-  referralEnabled,
-  wheelEnabled,
-}: MobileBottomNavProps) {
+export function MobileBottomNav({ isKeyboardOpen }: MobileBottomNavProps) {
   const { t } = useTranslation();
   const location = useLocation();
   const { haptic } = usePlatform();
@@ -26,29 +21,15 @@ export function MobileBottomNav({
   const isActive = (path: string) =>
     path === '/' ? location.pathname === '/' : location.pathname.startsWith(path);
 
-  // Core navigation items for bottom bar.
-  //
-  // Support is ALWAYS present — frustrated paying customers must find help
-  // in the primary nav, not in the hamburger drawer. Previously Wheel
-  // (a brand-moment surface) displaced Support (a critical-path surface)
-  // when the wheel feature flag was on; that trade is hostile to the
-  // support-user persona and was flagged by the /impeccable critique.
-  //
-  // Slot priority when both Wheel and Referral are enabled and only
-  // four slots remain after Dashboard / Subscriptions / Balance / Support:
-  //   - Wheel wins (operator opted in as a deliberate brand moment)
-  //   - Referral falls back to the hamburger drawer
-  // When only one of them is enabled, that one fills the slot.
+  // Four FIXED tabs — the bar's composition never depends on feature flags,
+  // so every user sees the same predictable navigation (nav redesign, step 1).
+  // Everything that used to live in the burger drawer (Support, Info, Wheel,
+  // Contests, Gift, admin, logout) is reachable from the Profile tab.
   const coreItems = [
     { path: '/', label: t('nav.dashboard'), icon: HomeIcon },
     { path: '/subscriptions', label: t('nav.devices'), icon: SubscriptionIcon },
     { path: '/balance', label: t('nav.balance'), icon: WalletIcon },
-    ...(wheelEnabled
-      ? [{ path: '/wheel', label: t('nav.wheel'), icon: WheelIcon }]
-      : referralEnabled
-        ? [{ path: '/referral', label: t('nav.referral'), icon: UsersIcon }]
-        : []),
-    { path: '/support', label: t('nav.support'), icon: ChatIcon },
+    { path: '/profile', label: t('nav.profile'), icon: UserIcon },
   ];
 
   const handleNavClick = () => {

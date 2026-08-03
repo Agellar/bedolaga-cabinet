@@ -23,13 +23,31 @@ import { Card } from '@/components/data-display/Card';
 import { Button } from '@/components/primitives/Button';
 import { Switch } from '@/components/primitives/Switch';
 import { staggerContainer, staggerItem } from '@/components/motion/transitions';
-import { CopyIcon, CheckIcon, ShareIcon, ArrowRightIcon, PencilIcon } from '@/components/icons';
+import {
+  CopyIcon,
+  CheckIcon,
+  ShareIcon,
+  ArrowRightIcon,
+  PencilIcon,
+  ChatIcon,
+  InfoIcon,
+  WheelIcon,
+  GamepadIcon,
+  ClipboardIcon,
+  GiftIcon,
+  CogIcon,
+  LogoutIcon,
+} from '@/components/icons';
+import { useFeatureFlags } from '@/hooks/useFeatureFlags';
 
 export default function Profile() {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const setUser = useAuthStore((state) => state.setUser);
+  const isAdmin = useAuthStore((state) => state.isAdmin);
+  const logout = useAuthStore((state) => state.logout);
+  const { wheelEnabled, hasContests, hasPolls, giftEnabled } = useFeatureFlags();
   const queryClient = useQueryClient();
 
   const [error, setError] = useState<string | null>(null);
@@ -280,6 +298,45 @@ export default function Profile() {
     >
       <motion.div variants={staggerItem}>
         <h1 className="text-2xl font-bold text-dark-50 sm:text-3xl">{t('profile.title')}</h1>
+      </motion.div>
+
+      {/* Quick navigation — everything the removed burger drawer used to hold
+          (nav redesign, step 3). Bonus rows render only when their flags are on. */}
+      <motion.div variants={staggerItem}>
+        <Card className="!p-0 overflow-hidden">
+          <nav>
+            {[
+              { path: '/support', label: t('nav.support'), icon: ChatIcon },
+              { path: '/info', label: t('nav.info'), icon: InfoIcon },
+              ...(wheelEnabled ? [{ path: '/wheel', label: t('nav.wheel'), icon: WheelIcon }] : []),
+              ...(hasContests
+                ? [{ path: '/contests', label: t('nav.contests'), icon: GamepadIcon }]
+                : []),
+              ...(hasPolls ? [{ path: '/polls', label: t('nav.polls'), icon: ClipboardIcon }] : []),
+              ...(giftEnabled ? [{ path: '/gift', label: t('nav.gift'), icon: GiftIcon }] : []),
+              ...(isAdmin ? [{ path: '/admin', label: t('admin.nav.title'), icon: CogIcon }] : []),
+            ].map((item) => (
+              <Link
+                key={item.path}
+                to={item.path}
+                className="flex items-center justify-between border-b border-dark-800/50 px-4 py-3.5 transition-colors last:border-b-0 hover:bg-dark-800/40"
+              >
+                <span className="flex items-center gap-3 text-sm font-medium text-dark-100">
+                  <item.icon className="h-5 w-5 text-dark-400" />
+                  {item.label}
+                </span>
+                <ArrowRightIcon className="h-4 w-4 text-dark-500" />
+              </Link>
+            ))}
+            <button
+              onClick={() => logout()}
+              className="flex w-full items-center gap-3 px-4 py-3.5 text-sm font-medium text-error-400 transition-colors hover:bg-dark-800/40"
+            >
+              <LogoutIcon className="h-5 w-5" />
+              {t('nav.logout')}
+            </button>
+          </nav>
+        </Card>
       </motion.div>
 
       {/* User Info Card */}

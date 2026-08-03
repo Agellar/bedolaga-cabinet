@@ -4,9 +4,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useState, useEffect } from 'react';
 import { initDataUser } from '@telegram-apps/sdk-react';
 
-import { useAuthStore } from '@/store/auth';
-import { displayName } from '@/utils/displayName';
-import { useShallow } from 'zustand/shallow';
 import { useTheme } from '@/hooks/useTheme';
 import { usePlatform } from '@/platform';
 import {
@@ -23,26 +20,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import TicketNotificationBell from '@/components/TicketNotificationBell';
 
 // Icons
-import {
-  HomeIcon,
-  SubscriptionIcon,
-  WalletIcon,
-  UsersIcon,
-  ChatIcon,
-  UserIcon,
-  LogoutIcon,
-  GamepadIcon,
-  ClipboardIcon,
-  InfoIcon,
-  CogIcon,
-  WheelIcon,
-  GiftIcon,
-  MenuIcon,
-  CloseIcon,
-  SunIcon,
-  MoonIcon,
-  SearchIcon,
-} from './icons';
+import { UserIcon, SunIcon, MoonIcon, SearchIcon } from './icons';
 
 const FALLBACK_NAME = import.meta.env.VITE_APP_NAME || 'Cabinet';
 const FALLBACK_LOGO = import.meta.env.VITE_APP_LOGO || 'V';
@@ -50,41 +28,22 @@ const FALLBACK_LOGO = import.meta.env.VITE_APP_LOGO || 'V';
 import type { TelegramPlatform } from '@/hooks/useTelegramSDK';
 
 interface AppHeaderProps {
-  mobileMenuOpen: boolean;
-  setMobileMenuOpen: (open: boolean) => void;
   onCommandPaletteOpen: () => void;
-  headerHeight: number;
   isFullscreen: boolean;
   safeAreaInset: { top: number; bottom: number; left: number; right: number };
   contentSafeAreaInset: { top: number; bottom: number; left: number; right: number };
   telegramPlatform?: TelegramPlatform;
-  wheelEnabled?: boolean;
-  referralEnabled?: boolean;
-  hasContests?: boolean;
-  hasPolls?: boolean;
-  giftEnabled?: boolean;
 }
 
 export function AppHeader({
-  mobileMenuOpen,
-  setMobileMenuOpen,
   onCommandPaletteOpen,
-  headerHeight,
   isFullscreen,
   safeAreaInset,
   contentSafeAreaInset,
   telegramPlatform,
-  wheelEnabled,
-  referralEnabled,
-  hasContests,
-  hasPolls,
-  giftEnabled,
 }: AppHeaderProps) {
   const { t } = useTranslation();
   const location = useLocation();
-  const { user, logout, isAdmin } = useAuthStore(
-    useShallow((state) => ({ user: state.user, logout: state.logout, isAdmin: state.isAdmin })),
-  );
   const { toggleTheme, isDark } = useTheme();
   const { haptic, platform } = usePlatform();
   const [userPhotoUrl, setUserPhotoUrl] = useState<string | null>(null);
@@ -131,46 +90,7 @@ export function AppHeader({
     }
   }, []);
 
-  // Lock scroll when menu is open (works in iframe/Telegram Mini App)
-  useEffect(() => {
-    if (!mobileMenuOpen) return;
-
-    const preventDefault = (e: TouchEvent) => {
-      // Allow scrolling inside menu content
-      const target = e.target as HTMLElement;
-      if (target.closest('.mobile-menu-content')) return;
-      e.preventDefault();
-    };
-
-    document.addEventListener('touchmove', preventDefault, { passive: false });
-    document.body.style.overflow = 'hidden';
-    document.documentElement.style.overflow = 'hidden';
-
-    return () => {
-      document.removeEventListener('touchmove', preventDefault);
-      document.body.style.overflow = '';
-      document.documentElement.style.overflow = '';
-    };
-  }, [mobileMenuOpen]);
-
-  const isActive = (path: string) => {
-    if (path === '/') return location.pathname === '/';
-    return location.pathname.startsWith(path);
-  };
   const isAdminActive = () => location.pathname.startsWith('/admin');
-
-  const navItems = [
-    { path: '/', label: t('nav.dashboard'), icon: HomeIcon },
-    { path: '/subscriptions', label: t('nav.devices'), icon: SubscriptionIcon },
-    { path: '/balance', label: t('nav.balance'), icon: WalletIcon },
-    ...(referralEnabled ? [{ path: '/referral', label: t('nav.referral'), icon: UsersIcon }] : []),
-    { path: '/support', label: t('nav.support'), icon: ChatIcon },
-    ...(hasContests ? [{ path: '/contests', label: t('nav.contests'), icon: GamepadIcon }] : []),
-    ...(hasPolls ? [{ path: '/polls', label: t('nav.polls'), icon: ClipboardIcon }] : []),
-    ...(wheelEnabled ? [{ path: '/wheel', label: t('nav.wheel'), icon: WheelIcon }] : []),
-    ...(giftEnabled ? [{ path: '/gift', label: t('nav.gift'), icon: GiftIcon }] : []),
-    { path: '/info', label: t('nav.info'), icon: InfoIcon },
-  ];
 
   return (
     <>
@@ -183,17 +103,10 @@ export function AppHeader({
             : undefined,
         }}
       >
-        <div
-          className="mx-auto w-full px-4"
-          onClick={() => mobileMenuOpen && setMobileMenuOpen(false)}
-        >
+        <div className="mx-auto w-full px-4">
           <div className="flex h-16 items-center justify-between">
             {/* Logo */}
-            <Link
-              to="/"
-              onClick={() => setMobileMenuOpen(false)}
-              className="flex flex-shrink-0 items-center"
-            >
+            <Link to="/" className="flex flex-shrink-0 items-center">
               <div className="relative flex h-10 w-10 flex-shrink-0 items-center justify-center overflow-hidden rounded-linear-lg border border-dark-700/50 bg-dark-800/80 shadow-md">
                 <span
                   className={cn(
@@ -239,7 +152,6 @@ export function AppHeader({
                   onClick={() => {
                     haptic.impact('light');
                     toggleTheme();
-                    setMobileMenuOpen(false);
                   }}
                   className="relative rounded-linear-lg border border-dark-700/50 bg-dark-800/50 p-2 text-dark-400 transition-all duration-200 hover:bg-dark-700 hover:text-accent-400"
                   title={isDark ? t('theme.light') || 'Light mode' : t('theme.dark') || 'Dark mode'}
@@ -265,149 +177,35 @@ export function AppHeader({
                 </button>
               )}
 
-              <div onClick={() => setMobileMenuOpen(false)}>
-                <TicketNotificationBell isAdmin={isAdminActive()} />
-              </div>
-              <div onClick={() => setMobileMenuOpen(false)}>
-                <LanguageSwitcher />
-              </div>
+              <TicketNotificationBell isAdmin={isAdminActive()} />
+              <LanguageSwitcher />
 
-              {/* Mobile menu button — labelled with an animated accent outline */}
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  haptic.impact('light');
-                  setMobileMenuOpen(!mobileMenuOpen);
-                }}
-                className="hover-border-gradient flex items-center gap-1 rounded-xl px-3 py-2 text-sm font-semibold text-dark-100"
-                aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-                aria-expanded={mobileMenuOpen}
+              {/* Profile avatar — replaces the burger menu (nav redesign, step 2).
+                  Everything the drawer used to hold now lives on /profile. */}
+              <Link
+                to="/profile"
+                onClick={() => haptic.impact('light')}
+                aria-label={t('nav.profile')}
+                className="relative flex h-9 w-9 items-center justify-center overflow-hidden rounded-full border border-dark-700/50 bg-dark-800/50 text-dark-300 transition-colors duration-200 hover:text-accent-400"
               >
-                {mobileMenuOpen ? (
-                  <CloseIcon className="h-5 w-5" />
+                {userPhotoUrl ? (
+                  <img
+                    src={userPhotoUrl}
+                    alt=""
+                    className="h-full w-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.style.display = 'none';
+                    }}
+                  />
                 ) : (
-                  <MenuIcon className="h-5 w-5" />
+                  <UserIcon className="h-5 w-5" />
                 )}
-                <span>{mobileMenuOpen ? t('common.close', 'Закрыть') : t('nav.menu', 'Меню')}</span>
-              </button>
+              </Link>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Mobile menu overlay */}
-      {mobileMenuOpen && (
-        <div
-          className="fixed inset-x-0 bottom-0 z-40 animate-fade-in lg:hidden"
-          style={{ top: headerHeight }}
-        >
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-dark-950/60"
-            onClick={() => setMobileMenuOpen(false)}
-          />
-
-          {/* Menu content */}
-          <div
-            className="mobile-menu-content absolute inset-x-0 bottom-0 top-0 overflow-y-auto overscroll-contain border-t border-dark-800/50 bg-dark-900/95 pb-[calc(5rem+env(safe-area-inset-bottom,0px))]"
-            style={{ WebkitOverflowScrolling: 'touch' }}
-          >
-            <div className="mx-auto max-w-6xl px-4 py-4">
-              {/* User info */}
-              <div className="mb-4 flex items-center justify-between border-b border-dark-800/50 pb-4">
-                <div className="flex items-center gap-3">
-                  {userPhotoUrl ? (
-                    <img
-                      src={userPhotoUrl}
-                      alt="Avatar"
-                      className="h-10 w-10 rounded-full object-cover"
-                      onError={(e) => {
-                        e.currentTarget.style.display = 'none';
-                        e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                      }}
-                    />
-                  ) : null}
-                  <div
-                    className={cn(
-                      'flex h-10 w-10 items-center justify-center rounded-full bg-dark-700',
-                      userPhotoUrl ? 'hidden' : '',
-                    )}
-                  >
-                    <UserIcon className="h-5 w-5" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-medium text-dark-100">
-                      {displayName(user)}
-                    </div>
-                    <div className="truncate text-xs text-dark-500">
-                      @{user?.username || `ID: ${user?.telegram_id}`}
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Nav items */}
-              <nav className="space-y-1">
-                {navItems.map((item) => (
-                  <Link
-                    key={item.path}
-                    to={item.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={isActive(item.path) ? 'nav-item-active' : 'nav-item'}
-                  >
-                    <item.icon className="h-5 w-5" />
-                    {item.label}
-                  </Link>
-                ))}
-
-                {isAdmin && (
-                  <>
-                    <div className="divider my-3" />
-                    <div className="px-4 py-1 text-xs font-medium uppercase tracking-wider text-dark-500">
-                      {t('admin.nav.title')}
-                    </div>
-                    <Link
-                      to="/admin"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={cn(
-                        'nav-item',
-                        isAdminActive()
-                          ? 'bg-warning-500/10 text-warning-400'
-                          : 'text-warning-500/70',
-                      )}
-                    >
-                      <CogIcon className="h-5 w-5" />
-                      {t('admin.nav.title')}
-                    </Link>
-                  </>
-                )}
-
-                <div className="divider my-3" />
-
-                <Link
-                  to="/profile"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className={isActive('/profile') ? 'nav-item-active' : 'nav-item'}
-                >
-                  <UserIcon className="h-5 w-5" />
-                  {t('nav.profile')}
-                </Link>
-
-                <button
-                  onClick={() => {
-                    setMobileMenuOpen(false);
-                    logout();
-                  }}
-                  className="nav-item w-full text-error-400"
-                >
-                  <LogoutIcon className="h-5 w-5" />
-                  {t('nav.logout')}
-                </button>
-              </nav>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 }

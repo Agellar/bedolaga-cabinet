@@ -192,6 +192,25 @@ export default function Subscription() {
     },
   });
 
+  // Autopay-from-balance toggle (renewal is charged from the internal balance)
+  const autopayMutation = useMutation({
+    mutationFn: (enabled: boolean) =>
+      subscriptionApi.updateAutopay(enabled, undefined, subscriptionId),
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: ['subscription', subscriptionId] });
+      queryClient.invalidateQueries({ queryKey: ['subscriptions-list'] });
+      showToast({
+        type: 'success',
+        message: data.autopay_enabled
+          ? t('subscription.autopayBalance.enabled', 'Автопродление с баланса включено')
+          : t('subscription.autopayBalance.disabled', 'Автопродление выключено'),
+      });
+    },
+    onError: (error: unknown) => {
+      showToast({ type: 'error', message: getErrorMessage(error) });
+    },
+  });
+
   // Auto-close all modals/forms when success notification appears
   const handleCloseAllModals = useCallback(() => {
     setShowDeviceTopup(false);
@@ -692,6 +711,62 @@ export default function Subscription() {
           )}
         </div>
       )}
+
+      {/* Autopay from balance — the renewal price is charged from the internal
+          balance shortly before expiry. Hidden for daily tariffs (they already
+          charge per-day) and trials (renewal there is a purchase). */}
+      {subscription &&
+        (subscription.is_active || subscription.is_limited) &&
+        !subscription.is_trial &&
+        !subscription.is_daily && (
+          <div
+            className="relative overflow-hidden rounded-3xl"
+            style={{
+              background: g.cardBg,
+              border: `1px solid ${g.cardBorder}`,
+              boxShadow: g.shadow,
+              padding: '16px 20px',
+            }}
+          >
+            <div className="flex items-center justify-between gap-4">
+              <div className="min-w-0">
+                <div className="text-sm font-bold tracking-tight text-dark-50">
+                  {t('subscription.autopayBalance.title', 'Автопродление с баланса')}
+                </div>
+                <div className="mt-1 text-[12px] leading-snug text-dark-50/40">
+                  {t(
+                    'subscription.autopayBalance.description',
+                    'Спишем стоимость продления текущего тарифа с вашего баланса перед окончанием подписки — при достаточной сумме.',
+                  )}
+                </div>
+              </div>
+              <button
+                type="button"
+                role="switch"
+                aria-checked={subscription.autopay_enabled}
+                disabled={autopayMutation.isPending}
+                onClick={() => {
+                  haptic.impact('light');
+                  autopayMutation.mutate(!subscription.autopay_enabled);
+                }}
+                className="relative h-6 w-11 shrink-0 rounded-full transition-colors duration-200 disabled:opacity-60"
+                style={{
+                  background: subscription.autopay_enabled
+                    ? 'rgb(var(--color-accent-500))'
+                    : 'rgba(148,163,184,0.25)',
+                }}
+              >
+                <span
+                  className="absolute top-0.5 h-5 w-5 rounded-full bg-white shadow transition-transform duration-200"
+                  style={{
+                    left: '2px',
+                    transform: subscription.autopay_enabled ? 'translateX(20px)' : 'translateX(0)',
+                  }}
+                />
+              </button>
+            </div>
+          </div>
+        )}
 
       {/* Additional options — moved under the renew CTA; actions 2 per row */}
       {subscription &&

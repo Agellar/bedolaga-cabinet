@@ -58,7 +58,7 @@ export function AppShell({ children }: AppShellProps) {
 
   // Extracted hooks
   const { appName, logoLetter, hasCustomLogo, logoUrl } = useBranding();
-  const { referralEnabled, wheelEnabled, hasContests, hasPolls, giftEnabled } = useFeatureFlags();
+  const { referralEnabled, giftEnabled } = useFeatureFlags();
   useScrollRestoration();
   // Анимированный фон рендерит BackgroundHost в App (не перемонтируется при
   // смене роута) — здесь только регистрируем, что на этом роуте он нужен.
@@ -75,7 +75,6 @@ export function AppShell({ children }: AppShellProps) {
   // Only apply fullscreen UI adjustments on mobile Telegram (iOS/Android)
   const isMobileFullscreen = isFullscreen && isMobile;
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isKeyboardOpen, setIsKeyboardOpen] = useState(false);
 
   // Reset keyboard state on route change — prevents bottom nav staying hidden after navigation
@@ -278,19 +277,11 @@ export function AppShell({ children }: AppShellProps) {
 
       {/* Mobile Header */}
       <AppHeader
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
         onCommandPaletteOpen={() => {}}
-        headerHeight={headerHeight}
         isFullscreen={isMobileFullscreen}
         safeAreaInset={safeAreaInset}
         contentSafeAreaInset={contentSafeAreaInset}
         telegramPlatform={platform}
-        wheelEnabled={wheelEnabled}
-        referralEnabled={referralEnabled}
-        hasContests={hasContests}
-        hasPolls={hasPolls}
-        giftEnabled={giftEnabled}
       />
 
       {/* Desktop spacer */}
@@ -302,12 +293,8 @@ export function AppShell({ children }: AppShellProps) {
       {/* Main content */}
       <main className="mx-auto max-w-6xl px-4 py-6 pb-28 lg:px-6 lg:pb-8">{children}</main>
 
-      {/* Mobile Bottom Navigation */}
-      <MobileBottomNav
-        isKeyboardOpen={isKeyboardOpen}
-        referralEnabled={referralEnabled}
-        wheelEnabled={wheelEnabled}
-      />
+      {/* Mobile Bottom Navigation — 4 fixed tabs, never reshaped by flags */}
+      <MobileBottomNav isKeyboardOpen={isKeyboardOpen} />
     </div>
   );
 }
