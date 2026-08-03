@@ -229,6 +229,10 @@
     "sendResetLink": "ارسال لینک بازنشانی",
     "tooManyAttempts": "تلاش‌های زیاد. لطفاً بعداً امتحان کنید",
     "verificationEmailNotice": "پس از ثبت نام، ایمیل تأیید به آدرس شما ارسال خواهد شد",
+    "legalConsentPrefix": "من این سند را مطالعه کرده‌ام:",
+    "legalConsentTitle": "یک قدم دیگر",
+    "legalConsentSubtitle": "برای ساخت حساب، تأیید کنید که اسناد را مطالعه کرده‌اید.",
+    "legalConsentContinue": "ادامه",
     "continueWithGoogle": "ادامه با Google",
     "continueWithYandex": "ادامه با Yandex",
     "continueWithDiscord": "ادامه با Discord",
@@ -623,6 +627,33 @@
       "autopayHint": "اشتراک شما به‌صورت خودکار از طریق SBP بدون نیاز به کارت ذخیره‌شده شارژ می‌شود",
       "purchaseButton": "⚡ اشتراک با پرداخت خودکار SBP",
       "purchaseHint": "اولین برداشت، اتصال را در اپ بانک تأیید می‌کند؛ تمدیدها به‌صورت خودکار برداشت می‌شوند."
+    },
+    "lavaRecurring": {
+      "title": "تمدید خودکار Lava",
+      "connect": "اتصال",
+      "payFirst": "پرداخت صورتحساب اول",
+      "cancel": "غیرفعال‌سازی",
+      "confirmCancel": "تمدید خودکار Lava غیرفعال شود؟ اشتراک دیگر به‌طور خودکار تمدید نمی‌شود.",
+      "cancelled": "تمدید خودکار Lava غیرفعال شد",
+      "enableError": "فعال‌سازی تمدید خودکار Lava ناموفق بود",
+      "cancelError": "غیرفعال‌سازی تمدید خودکار Lava ناموفق بود",
+      "statusPending": "در انتظار پرداخت صورتحساب اول",
+      "statusActive": "فعال",
+      "statusPastDue": "پرداخت ناموفق بود — دوباره تلاش کنید",
+      "nextCharge": "برداشت بعدی {{date}}",
+      "amountPerPeriod": "{{amount}} ₽ {{period}}",
+      "amountPerDays": "هر {{days}} روز {{amount}} ₽",
+      "period": {
+        "day": "روزانه",
+        "week": "هفتگی",
+        "month": "ماهانه",
+        "quarter": "هر سه ماه",
+        "halfYear": "هر شش ماه",
+        "year": "سالانه"
+      },
+      "autopayHint": "اشتراک به‌طور خودکار از طریق Lava تمدید می‌شود",
+      "purchaseButton": "⚡ ثبت‌نام با تمدید خودکار Lava",
+      "purchaseHint": "صورتحساب اول از طریق لینک Lava پرداخت می‌شود؛ سپس تمدیدها بر اساس دوره محصول به‌طور خودکار کسر می‌شوند."
     },
     "backToList": "بازگشت به فهرست اشتراک‌ها",
     "confirmDelete": "اشتراک حذف شود؟",
@@ -2030,9 +2061,16 @@
         "sys_maintenance": "نگهداری",
         "sys_backup": "پشتیبان‌گیری",
         "sys_version": "نسخه",
-        "sys_logging": "لاگ‌ها"
+        "sys_logging": "لاگ‌ها",
+        "iface_info": "اسناد حقوقی",
+        "iface_menu": "دکمه منو",
+        "sys_cabinet": "کابین",
+        "sys_other": "سایر تنظیمات"
       },
       "categories": {
+        "CABINET": "کابین",
+        "INFO_PAGES": "اسناد حقوقی و پرسش‌های متداول",
+        "MENU": "دکمه منو",
         "TELEGRAM_WIDGET": "Telegram Login Widget",
         "TELEGRAM_OIDC": "Telegram Login (OIDC)"
       },
@@ -2048,7 +2086,15 @@
       "offlineConv": "تبدیل‌های آفلاین",
       "apiKey": "کلید API",
       "legalFooter": "پاورقی حقوقی",
-      "legalFooterDesc": "پیوند به پیشنهاد، سیاست حریم خصوصی و پرداخت‌های مکرر در پایین صفحه ورود"
+      "legalFooterDesc": "پیوند به پیشنهاد، سیاست حریم خصوصی و پرداخت‌های مکرر در پایین صفحه ورود",
+      "botStartVideo": "ویدیوی منوی شروع ربات",
+      "botStartVideoDesc": "ربات این ویدیو را به‌جای تصویر لوگو به پیام /start پیوست می‌کند. فایل یک‌بار در تلگرام بارگذاری می‌شود و ما فقط شناسه آن را نگه می‌داریم.",
+      "botStartVideoUpload": "بارگذاری ویدیو",
+      "botStartVideoReplace": "جایگزینی ویدیو",
+      "botStartVideoRemove": "حذف",
+      "botStartVideoActive": "ویدیو تنظیم شده است",
+      "botStartVideoNone": "ویدیویی تنظیم نشده — منو از تصویر لوگو استفاده می‌کند",
+      "botStartVideoError": "بارگذاری ویدیو ناموفق بود"
     },
     "buttons": {
       "color": "رنگ دکمه",
@@ -2370,7 +2416,9 @@
         "periodsRequired": "حداقل یک دوره اضافه کنید",
         "dailyPriceRequired": "قیمت روزانه بزرگتر از 0 را وارد کنید",
         "trafficPackagesRequired": "حداقل یک بسته ترافیک اضافه کنید (یا خرید ترافیک را غیرفعال کنید)"
-      }
+      },
+      "lavaProductLabel": "محصول Lava (تمدید خودکار)",
+      "lavaProductDesc": "شناسه UUID محصول از پنل Lava: قیمت و دوره کسر در آنجا تنظیم می‌شود. خالی — تمدید خودکار برای این تعرفه در دسترس نیست."
     },
     "servers": {
       "title": "مدیریت اسکوادها",
@@ -3397,7 +3445,9 @@
         "notificationsFailed": "(ناموفق: {{count}})",
         "sendError": "ارسال پیشنهاد ناموفق بود",
         "notificationsSent": "اعلان‌های ارسال شده",
-        "offersCreated": "پیشنهادهای ایجاد شده"
+        "offersCreated": "پیشنهادهای ایجاد شده",
+        "deliveryTitle": "تحویل در تلگرام",
+        "openAsBroadcast": "نمایش به‌عنوان ارسال گروهی"
       },
       "notFound": "قالب یافت نشد",
       "noActiveTemplates": "قالب فعالی وجود ندارد",
@@ -5227,6 +5277,14 @@
     "tabBuy": "خرید",
     "tabMyGifts": "هدایای من",
     "unlimitedTraffic": "ترافیک نامحدود",
+    "qrHint": "برای فعال‌سازی هدیه اسکن کنید",
+    "scanButton": "📷 اسکن QR",
+    "scanInProgress": "در حال اسکن…",
+    "scanCancel": "توقف اسکن",
+    "scanDescription": "دوربین را روی کد QR هدیه بگیرید",
+    "scanNotRecognized": "در این QR کد هدیه‌ای نیست",
+    "scanError": "اسکن ناموفق بود",
+    "scanNoCamera": "دوربین در دسترس نیست — کد را دستی وارد کنید",
     "activating": "در حال فعال‌سازی...",
     "codeCopied": "کد کپی شد!",
     "copyCode": "کپی",

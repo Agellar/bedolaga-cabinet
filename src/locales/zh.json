@@ -229,6 +229,10 @@
     "sendResetLink": "发送重置链接",
     "tooManyAttempts": "尝试次数过多，请稍后再试",
     "verificationEmailNotice": "注册后，验证邮件将发送到您的邮箱",
+    "legalConsentPrefix": "我已阅读",
+    "legalConsentTitle": "还差一步",
+    "legalConsentSubtitle": "创建账户前，请确认您已阅读以下文件。",
+    "legalConsentContinue": "继续",
     "continueWithGoogle": "通过 Google 继续",
     "continueWithYandex": "通过 Yandex 继续",
     "continueWithDiscord": "通过 Discord 继续",
@@ -623,6 +627,33 @@
       "autopayHint": "您的订阅将通过 SBP 自动扣款，无需保存银行卡",
       "purchaseButton": "⚡ 通过SBP自动扣款订阅",
       "purchaseHint": "首次扣款即在银行应用中确认绑定；续费将按资费周期自动扣款。"
+    },
+    "lavaRecurring": {
+      "title": "Lava 自动续订",
+      "connect": "连接",
+      "payFirst": "支付首期账单",
+      "cancel": "关闭",
+      "confirmCancel": "要关闭 Lava 自动续订吗？订阅将不再自动续订。",
+      "cancelled": "已关闭 Lava 自动续订",
+      "enableError": "无法开启 Lava 自动续订",
+      "cancelError": "无法关闭 Lava 自动续订",
+      "statusPending": "等待支付首期账单",
+      "statusActive": "已启用",
+      "statusPastDue": "扣款失败 — 请重试",
+      "nextCharge": "下次扣款 {{date}}",
+      "amountPerPeriod": "{{amount}} ₽ {{period}}",
+      "amountPerDays": "每 {{days}} 天 {{amount}} ₽",
+      "period": {
+        "day": "每天",
+        "week": "每周",
+        "month": "每月",
+        "quarter": "每季度",
+        "halfYear": "每半年",
+        "year": "每年"
+      },
+      "autopayHint": "订阅将通过 Lava 自动续订",
+      "purchaseButton": "⚡ 使用 Lava 自动续订下单",
+      "purchaseHint": "首期账单通过 Lava 链接支付；之后按产品周期自动扣款续订。"
     },
     "backToList": "返回订阅列表",
     "confirmDelete": "删除订阅？",
@@ -2097,9 +2128,16 @@
         "sys_maintenance": "维护",
         "sys_backup": "备份",
         "sys_version": "版本",
-        "sys_logging": "日志"
+        "sys_logging": "日志",
+        "iface_info": "法律文件",
+        "iface_menu": "菜单按钮",
+        "sys_cabinet": "用户中心",
+        "sys_other": "其他设置"
       },
       "categories": {
+        "CABINET": "用户中心",
+        "INFO_PAGES": "法律文件与 FAQ",
+        "MENU": "菜单按钮",
         "TELEGRAM_WIDGET": "Telegram Login Widget",
         "TELEGRAM_OIDC": "Telegram Login (OIDC)"
       },
@@ -2115,7 +2153,15 @@
       "offlineConv": "离线转化",
       "apiKey": "API 密钥",
       "legalFooter": "法律页脚",
-      "legalFooterDesc": "登录页面底部的要约、隐私政策和定期付款链接"
+      "legalFooterDesc": "登录页面底部的要约、隐私政策和定期付款链接",
+      "botStartVideo": "机器人开始菜单视频",
+      "botStartVideoDesc": "机器人会在 /start 消息中附带该视频，替代 logo 图片。文件仅上传到 Telegram 一次，我们只保存其标识符。",
+      "botStartVideoUpload": "上传视频",
+      "botStartVideoReplace": "替换视频",
+      "botStartVideoRemove": "删除",
+      "botStartVideoActive": "已设置视频",
+      "botStartVideoNone": "未设置视频 — 菜单使用 logo 图片",
+      "botStartVideoError": "视频上传失败"
     },
     "buttons": {
       "color": "按钮颜色",
@@ -2436,7 +2482,9 @@
         "periodsRequired": "请添加至少一个期限",
         "dailyPriceRequired": "请输入大于0的每日价格",
         "trafficPackagesRequired": "请添加至少一个流量包（或关闭流量购买）"
-      }
+      },
+      "lavaProductLabel": "Lava 产品（自动续订）",
+      "lavaProductDesc": "来自 Lava 后台的产品 UUID：价格与扣款周期在那里设置。留空则该套餐不支持自动续订。"
     },
     "servers": {
       "title": "服务器管理",
@@ -3396,7 +3444,9 @@
         "notificationsFailed": "（失败: {{count}}）",
         "sendError": "发送优惠失败",
         "notificationsSent": "已发送通知",
-        "offersCreated": "已创建优惠"
+        "offersCreated": "已创建优惠",
+        "deliveryTitle": "Telegram 送达情况",
+        "openAsBroadcast": "作为群发查看"
       },
       "notFound": "未找到模板",
       "noActiveTemplates": "没有活跃的模板",
@@ -5226,6 +5276,14 @@
     "tabBuy": "购买",
     "tabMyGifts": "我的礼物",
     "unlimitedTraffic": "无限流量",
+    "qrHint": "扫描以激活礼物",
+    "scanButton": "📷 扫描二维码",
+    "scanInProgress": "扫描中…",
+    "scanCancel": "停止扫描",
+    "scanDescription": "将摄像头对准礼物二维码",
+    "scanNotRecognized": "该二维码中没有礼物码",
+    "scanError": "扫描失败",
+    "scanNoCamera": "摄像头不可用 — 请手动输入代码",
     "activating": "激活中...",
     "codeCopied": "代码已复制！",
     "copyCode": "复制",
