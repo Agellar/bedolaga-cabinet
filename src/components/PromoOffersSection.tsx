@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router';
+import { useNavigate, useSearchParams } from 'react-router';
 import { promoApi, PromoOffer } from '../api/promo';
 import { ClockIcon, CheckIcon, XCircleIcon } from './icons';
 import { useDestructiveConfirm } from '@/platform/hooks/useNativeDialog';
@@ -117,6 +117,49 @@ export default function PromoOffersSection({ className = '' }: PromoOffersSectio
       setTimeout(() => setErrorMessage(null), 5000);
     },
   });
+
+  // Автоприменение скидки по ссылке из рассылки.
+  //
+  // Кнопка в сообщении бота открывает кабинет с ?claim_offer=auto. Здесь
+  // мы сами находим активное непринятое предложение и применяем его —
+  // человеку не приходится искать баннер и жать «Активировать».
+  //
+  // Конкретный id в ссылку не зашиваем: рассылка уходит одним сообщением
+  // на всех, а предложение у каждого своё. Кто пришёл — знает бэкенд по
+  // initData, ему и виднее, какой оффер активен.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const autoClaimHandled = useRef(false);
+
+  useEffect(() => {
+    if (autoClaimHandled.current) return;
+    if (searchParams.get('claim_offer') !== 'auto') return;
+    // Ждём загрузку: пустой список до ответа сервера не значит «нет офферов».
+    if (offersLoading) return;
+
+    autoClaimHandled.current = true;
+    // Убираем параметр сразу: обновление страницы не должно пытаться
+    // применить оффер повторно.
+    const next = new URLSearchParams(searchParams);
+    next.delete('claim_offer');
+    setSearchParams(next, { replace: true });
+
+    const pending = offers.find(
+      (offer) => !offer.is_claimed && offer.is_active && (offer.discount_percent ?? 0) > 0,
+    );
+    if (!pending) return;
+
+    setClaimingId(pending.id);
+    claimMutation.mutate(pending.id, {
+      onSuccess: () => navigate('/subscription/purchase'),
+    });
+  }, [
+    searchParams,
+    setSearchParams,
+    offers,
+    offersLoading,
+    claimMutation,
+    navigate,
+  ]);
 
   // Deactivate discount mutation.
   // A discount granted by a PROMOCODE must be turned off via the dedicated route
